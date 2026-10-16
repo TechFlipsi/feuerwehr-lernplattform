@@ -212,6 +212,8 @@ function renderNavi(){
     '<button '+(akt===id?'class="sel"':'')+' onclick="go(\''+id+'\')" aria-label="'+l+'">'+svgIc(ic)+'<span>'+l+'</span></button>').join('');
 }
 function go(m){
+  /* Start-Klick verlässt das Lernthema komplett — Navi wie beim frischen Seitenaufruf (nur Start+Lernthemen). */
+  if (m==='home' && paketAktiv){ paketAktiv = null; try{ localStorage.removeItem('fw_zuletzt'); }catch(err){} }
   akt = m; renderNavi();
   SCREENS.forEach(s=>{ const n=$('scr-'+s); if(n) n.classList.add('versteckt'); });
   const sc = $('scr-'+m); if (sc) sc.classList.remove('versteckt');
