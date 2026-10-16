@@ -122,7 +122,7 @@ const BADGES = [
   {id:'karten10',ic:'🃏', name:'10 Karten sitzen', desc:'10 Lernkarten im Leitner-Kasten durchschaut'},
   {id:'karten50',ic:'🃏', name:'50 Karten sitzen', desc:'50 Lernkarten im Leitner-Kasten durchschaut'},
   {id:'kartenAlle',ic:'🏆', name:'Katalog gemeistert', desc:'Alle Lernkarten eines Lehrgangs sitzen'},
-  {id:'quiz100', ic:'🎯', name:'Perfektes Quiz', desc:'Ein Quiz-Runde mit 100 % beendet'},
+  {id:'quiz100', ic:'🎯', name:'Perfektes Quiz', desc:'Eine Quiz-Runde mit 100 % beendet'},
   {id:'note1',   ic:'🎖️', name:'Prüfungsreif', desc:'Prüfungssimulation mit Note 1 abgeschlossen'},
   {id:'rucksack0',ic:'🎒', name:'Rucksack leer', desc:'Fehlerrucksack komplett abgearbeitet'},
 ];
@@ -203,7 +203,12 @@ function renderNavi(){
       ['unlagen','Unterlagen','unlagen']
     );
   }
-  n.innerHTML = items.map(([id,l,ic]) =>
+  /* Mobil max. 5 Punkte (Bottom-Nav-Standard): Katalog + Unterlagen sind im
+     Dashboard unter "Werkzeuge" erreichbar, Desktop zeigt alle. */
+  const mobil = window.matchMedia('(max-width:699px)').matches;
+  const mobilMax = ['dash','katalog','unlagen'];
+  const zeigen = mobil ? items.filter(it => mobilMax.indexOf(it[0])===-1) : items;
+  n.innerHTML = zeigen.map(([id,l,ic]) =>
     '<button '+(akt===id?'class="sel"':'')+' onclick="go(\''+id+'\')" aria-label="'+l+'">'+svgIc(ic)+'<span>'+l+'</span></button>').join('');
 }
 function go(m){
@@ -227,12 +232,12 @@ function go(m){
 
 function tipps_und_faq(){
   let t = '<div class="karte"><div class="farbe">Wie du hier am effektivsten lernst</div>'+
-    '<div class="stat" style="text-align:left">'+
-    '<b>1 · Täglich 10–15 Minuten schlagen Marathon.</b> Kurz und regelmäßig: das Tagespack auf dem Überblick bringt dich weiter als ein langer Block am Wochenende.'+
-    '<b>2 · Erst antworten, dann aufdecken.</b> Bei Karten und Quiz immer erst selbst in eigenen Worten antworten — genau dann entsteht Lernen.'+
-    '<b>3 · Fehler sind Treibstoff.</b> Falsche Fragen landen im Fehlerrucksack und kommen gezielt wieder — nicht bestraft, sondern geübt.'+
-    '<b>4 · Kurz vor der Prüfung:</b> Prüfungstag-Simulation unter echten Bedingungen (Zeitdruck, Mischung), dann gezielt den Fehlerrucksack abarbeiten.'+
-  '</div></div>';
+    '<ul class="tipp-liste">'+
+    '<li><b>1 · Täglich 10–15 Minuten schlagen Marathon.</b> Kurz und regelmäßig: das Tagespack auf dem Überblick bringt dich weiter als ein langer Block am Wochenende.</li>'+
+    '<li><b>2 · Erst antworten, dann aufdecken.</b> Bei Karten und Quiz immer erst selbst in eigenen Worten antworten — genau dann entsteht Lernen.</li>'+
+    '<li><b>3 · Fehler sind Treibstoff.</b> Falsche Fragen landen im Fehlerrucksack und kommen gezielt wieder — nicht bestraft, sondern geübt.</li>'+
+    '<li><b>4 · Kurz vor der Prüfung:</b> Prüfungstag-Simulation unter echten Bedingungen (Zeitdruck, Mischung), dann gezielt den Fehlerrucksack abarbeiten.</li>'+
+    '</ul></div>';
   t += '<details class="box"><summary>Warum funktioniert dieses System?</summary><div class="innen stat">'+
     'Die Plattform baut auf den in der Lernforschung am besten belegten Techniken auf.'+
     '<ul style="margin:8px 0 0;list-style:none">'+
@@ -251,18 +256,18 @@ function zeigeHome(){
   let h =
     '<div class="karte hero"><div class="farbe r">Ausbildung · Handzettel-Prinzip</div>'+
     '<div class="frage" style="font-size:1.22em">Feuerwehr-Ausbildung zum Erlernen — so wie Lernen 2026 wirklich funktioniert.</div>'+
-    '<p class="stat" style="margin-top:8px">Jeder Lehrgang ist ein Themen-Paket: Karte anklicken → alles zum Thema. Abfragen statt Lesen, kleine häppchenweise Sessions, sofortiges Feedback mit Erklärung. Fortschritt bleibt lokal auf deinem Gerät.</p></div>';
+    '<p class="stat" style="margin-top:8px">Jeder Lehrgang ist ein Themen-Paket: Karte anklicken → alles zum Thema. Abfragen statt Lesen, kleine tägliche Sessions, sofortiges Feedback mit Erklärung. Fortschritt bleibt lokal auf deinem Gerät.</p></div>';
   if (s.xps>0 || Object.keys(s).length){
     const r = rangVon(s.xps);
     h += '<div class="streak-row">'+
-      '<div class="streak-box"><span class="flamme">🔥</span><div class="val">'+s.streak+' Tag'+(s.streak===1?'':'e')+'</div><div class="lbl">Lern-Streak</div></div>'+
+      '<div class="streak-box"><span class="flamme">🔥</span><div class="val">'+s.streak+' '+(s.streak===1?'Tag':'Tage')+'</div><div class="lbl">Lern-Streak</div></div>'+
       '<div class="streak-box"><span style="font-size:1.55em">⚡</span><div class="val">'+s.xps+' XP</div><div class="lbl">Rang: '+esc(r.name)+'</div></div></div>';
   }
   h += '<div class="home-cta"><button class="btn gross" onclick="go(\'themen\')">Lernthemen öffnen '+svgIc('pfeil')+'</button></div>';
   h += '<div class="home-erklaerung">'+
     '<div class="karte"><div class="farbe">Die Schriftgröße A · A+ · A++</div>'+
     '<div class="stat" style="text-align:left">Oben rechts stellst du mit dem <b>A-Knopf</b> die Schriftgröße ein. '+
-    'Drei Stufen, eine Pro-Klick: normal, größer, am größten fürs Handy am Kiosk oder bei schlechtem Licht. '+
+    'Drei Stufen, ein Klick pro Stufe: normal, größer, am größten fürs Handy im Einsatz oder bei schlechtem Licht. '+
     'Die Wahl wird gespeichert und bleibt für den nächsten Besuch.</div></div>'+
     '<div class="karte"><div class="farbe">Hell · Dunkel</div>'+
     '<div class="stat" style="text-align:left">Der Mondknopf daneben schaltet zwischen hellem Tag-Design und dunklem Nacht-Design. '+
@@ -289,7 +294,9 @@ function zeigeThemen(){
         '<span class="chip on">'+st.theorie_katalog+' Theorie</span><span class="chip on">'+st.praxis+' Praxis</span>'+
         '<span class="chip on">'+st.karten+' Karten</span><span class="chip on">'+st.unterlagen+' Unterlagen</span></div>' : '')+
       (gelesen ? '<div class="fbalk gruen" style="margin-top:10px"><i style="width:'+gelesen.pct+'%"></i></div>'+
-        '<div class="planhinweis">'+gelesen.sitzen+' von '+gelesen.gesamt+' Karten sitzen'+(gelesen.pct>0?' ('+gelesen.pct+'%)':'')+'</div>'
+        '<div class="planhinweis">'+(gelesen.pct>0
+          ? '<b>'+gelesen.sitzen+'</b> von '+gelesen.gesamt+' Karten sitzen ('+gelesen.pct+' %)'
+          : 'Noch nicht begonnen — <b>'+(gelesen.gesamt)+' Karten</b> warten auf dich')+'</div>'
         : '<div class="planhinweis" style="margin-top:8px">Noch nicht begonnen</div>')+
       '<span class="pk-cta">'+(String(zl)===m.id?'Weitermachen':'Öffnen')+' '+svgIc('pfeil')+'</span></button>';
   }).join('')+'</div>';
@@ -330,22 +337,31 @@ function zeigeDash(){
   let h = '<div class="mod-head"><button class="mod-back" onclick="paketZu()" aria-label="Zurück">'+svgIc('back')+'</button>'+
     '<div><div class="pk-sub" style="color:var(--text-dim);font-size:.72em;font-weight:800;text-transform:uppercase;letter-spacing:.05em">'+esc(m.untertitel)+'</div>'+
     '<h2 style="font-size:1.22em">'+esc(m.titel)+'</h2></div></div>';
-  /* Tagespack */
-  h += '<div class="karte tagespack'+(tages.komplett?' erledigt':'')+'">'+
-    '<div class="farbe">'+(tages.komplett?'Tagespack erledigt ✓':'Heutiges Tagespack · ca. 10 Min')+'</div>'+
-    '<div class="streak-row" style="margin:10px 0 4px">'+
-      '<div class="streak-box" style="padding:11px 13px"><span class="flamme">🃏</span><div class="val">'+Math.min(tages.karten,15)+'/15</div><div class="lbl">Karten abgefragt</div></div>'+
-      '<div class="streak-box" style="padding:11px 13px"><span class="flamme">🎯</span><div class="val">'+(tages.quiz?1:0)+'/1</div><div class="lbl">Quiz-Runde</div></div>'+
+  /* JETZT DRAN — der eine klare nächste Schritt (Learner-Frage 2: „Was mache ich als Nächstes?") */
+  const naechstes = !tages.komplett ? 'karten' : (rucksackN()>0 ? 'rucksack' : null);
+  h += '<div class="karte tagespack jetzt-dran'+(tages.komplett?' erledigt':'')+'">'+
+    '<div class="farbe">'+(tages.komplett?'Tagespack erledigt ✓':'Jetzt dran · ca. 10 Min')+'</div>'+
+    '<div class="stat" style="margin-bottom:10px">'+(tages.komplett
+      ? '🎉 Erledigt — Streak für heute gesichert!'
+      : (naechstes==='karten'
+        ? '<b>'+Math.max(0,15-tages.karten)+' Karten</b> abfragen und <b>1 Quiz-Runde</b> — das ist heute dran.'
+        : 'Fehlerrucksack abarbeiten: <b>'+rucksackN()+' Frage'+(rucksackN()===1?'':'n')+'</b> warten auf dich.'))+'</div>'+
+    '<div class="mini-row">'+
+      '<div class="mini"><span class="flamme">🃏</span><b>'+Math.min(tages.karten,15)+'/15</b><span>Karten</span></div>'+
+      '<div class="mini"><span class="flamme">🎯</span><b>'+(tages.quiz?1:0)+'/1</b><span>Quiz-Runde</span></div>'+
     '</div>'+
-    (tages.komplett
-      ? '<div class="stat">🎉 Erledigt — Streak für heute gesichert! Ein bisschen mehr schadet nie: <b>Fehlerrucksack</b> oder ein <b>Test</b>.</div>'
-      : '<div class="stat">Kurz dranbleiben — 15 Karten + eine Quiz-Runde halten deinen Streak und bringen den Stoff täglich weiter.</div>')+
+    (naechstes==='karten'
+      ? '<button class="btn" onclick="go(\'dashKarten\')">'+svgIc('play2')+' Tagespack starten</button>'
+      : (naechstes==='rucksack'
+        ? '<button class="btn" onclick="quizRucksack()">'+svgIc('rucksack')+' Rucksack abfragen</button>'
+        : '<button class="btn zweit" onclick="go(\'test\')">'+svgIc('test')+' Optional: Prüfungssimulation</button>'))+
     '</div>';
-  /* Streak + XP + Rang */
-  h += '<div class="streak-row">'+
-    '<div class="streak-box"><span class="flamme">🔥</span><div class="val">'+s.streak+'</div><div class="lbl">Tage Streak</div></div>'+
-    '<div class="streak-box"><span style="font-size:1.55em">⚡</span><div class="val">'+s.xps+'</div><div class="lbl">XP · '+esc(r.name)+
-      (r.next?(' · noch '+(r.next[0]-s.xps)+' bis '+esc(r.next[1])):' · Maximalrang')+'</div></div></div>';
+  /* Status-Zeile (Learner-Frage 1 „Was habe ich geschafft?" + 3 „Wie nah am Ziel?") */
+  h += '<div class="fortschritt-band">'+
+    '<span title="Tage in Folge gelernt">🔥 '+s.streak+' <b>'+(s.streak===1?'Tag':'Tage')+'</b></span>'+
+    '<span title="Gesammelte XP und Rang">⚡ '+s.xps+' XP · '+esc(r.name)+(r.next?' (noch '+(r.next[0]-s.xps)+' bis '+esc(r.next[1])+')':'')+'</span>'+
+    '<span title="Karten, die sicher sitzen">🃏 '+prog.sitzen+'/'+prog.gesamt+' sitzen · '+prog.pct+' %</span>'+
+  '</div>';
   /* Fortschritts-Kacheln: Karten + Quiz + Test */
   h += '<div class="geb-grid">'+
     '<div class="geb-karte"><div class="streifen" style="background:var(--rot)"></div>'+
@@ -500,7 +516,7 @@ function zeigeKartenStart(){
     sc.innerHTML = '<div class="mod-head"><button class="mod-back" onclick="go(\'dash\')" aria-label="Zurück">'+svgIc('back')+'</button><h2 style="font-size:1.18em">Karten fertig</h2></div>'+
       '<div class="karte" style="text-align:center"><div class="ende-hero"><div class="note" style="color:var(--gruen)">✓</div>'+
       '<div class="big" style="font-size:1.35em;margin-top:6px">'+fLbl+'</div></div>'+
-      '<div class="stat">Nicht fällige Karten kommen laut Leitner-Plan erst am nächsten Termin (1 / 3 / 7 Tage) — das Vertreiben aus dem Gedächtnis in Abständen ist genau der Effekt.</div>'+
+      '<div class="stat">Nicht fällige Karten kommen laut Leitner-Plan erst am nächsten Termin (1 / 3 / 7 Tage) — die Abstände zwischen den Wiederholungen sind genau der Lerneffekt.</div>'+
       '<button class="btn zweit" onclick="kartenRun(\'alle\')">Trotzdem weiterüben (alle Karten)</button>'+
       '<button class="btn" onclick="go(\'quiz\')">Weiter zum Quiz</button>'+
       '<button class="btn zweit" onclick="kSetFilter(null)">Gebiete-Auswahl</button></div>';
@@ -681,9 +697,11 @@ function zeigeQuiz(){
     '<div class="minfo" style="margin:0">Frage '+(qStatus.pos+1)+' von '+qStatus.idx.length+' · '+qStatus.punkte+' richtig'+(qStatus.rs?' · Fehlerrucksack':'')+'</div></div>'+
     '<div class="karte"><div class="farbe r">'+esc(f.src)+(f.zusatz?' · Zusatz':'')+'</div><div class="frage">'+f.f+'</div>'+
     f.opts.map((o,j)=>'<button class="opt" onclick="quizWaehl('+j+',this)"><span class="buchstabe">'+BUCHST[j]+'</span><span>'+o+'</span></button>').join('')+
-    '<div class="ruck" id="qerkl">'+(f.e||'')+'</div></div>';
+    '<div class="ruck" id="qerkl">'+(f.e||'')+'</div>'+
+    '<button class="btn klein" id="qweiter" style="display:none" onclick="quizWeiter()">Weiter '+svgIc('pfeil')+'</button></div>';
   window.scrollTo(0,0);
 }
+function quizWeiter(){ qStatus.pos++; zeigeQuiz(); }
 function quizWaehl(n, btn){
   const d = paketAktiv.data;
   const f = d.fragen[qStatus.idx[qStatus.pos]];
@@ -701,8 +719,9 @@ function quizWaehl(n, btn){
     rucksackAdd(qStatus.idx[qStatus.pos]);
   }
   const ex = $('qerkl'); if (ex) ex.classList.add('zeigen');
+  const wb = $('qweiter'); if (wb) wb.style.display='flex';
   window.__t2 && clearTimeout(window.__t2);
-  window.__t2 = setTimeout(()=>{ qStatus.pos++; zeigeQuiz(); }, 2600);
+  window.__t2 = setTimeout(()=>{ if (document.getElementById('qweiter')) quizWeiter(); }, 9000);
 }
 function quizAbort(){ qStatus.l=false; qStatus={l:false}; go('quiz'); }
 function quizEnde(){
@@ -756,11 +775,12 @@ function buildPruefungTag(){
 }
 function testStart(){
   let h = '<div class="mod-head"><button class="mod-back" onclick="go(\'dash\')" aria-label="Zurück">'+svgIc('back')+'</button><h2 style="font-size:1.18em">Prüfungssimulation</h2></div>'+
-    '<div class="karte"><div class="farbe r">Test · unter echten Bedingungen</div><div class="frage">Welcher Modus?</div>'+
-    '<button class="btn" onclick="testLauf(1)">'+svgIc('test')+' Prüfungstag — 35 Fragen: 5 je Modul + 10 Taktik-Kombi</button>'+
-    '<div class="planhinweis" style="margin:6px 0 10px">Wie am echten Prüfungstag laut Prüfungsordnung v03, mit Zeitdruck (25 Min) und Bestehens-Prognose je Modul (3 von 5 = bestanden).</div>'+
-    '<button class="btn gelb" onclick="testLauf(2)">'+svgIc('play2')+' Übungs-Mix — 30 Fragen gemischt, 15 Min</button>'+
-    '<div class="planhinweis" style="margin:6px 0 0">Katalog + Praxis locker gemischt (katalogrein, ohne Zusatz-Stoff). Bestwert wird gespeichert.</div></div>';
+    '<div class="karte"><div class="farbe r">Test · unter echten Bedingungen</div><div class="frage" style="margin-bottom:4px">Welcher Modus?</div>'+
+    '<div class="stat" style="margin-bottom:12px">Zwei Wege — wie am echten Prüfungstag oder locker gemischt zum Üben.</div>'+
+    '<button class="btn" onclick="testLauf(1)">'+svgIc('test')+' Prüfungstag — 35 Fragen, 25 Min</button>'+
+    '<div class="planhinweis" style="margin:4px 0 12px">5 Fragen je Modul + 10 Taktik-Kombi, Bestehens-Prognose je Modul (3 von 5 = bestanden) — laut Prüfungsordnung v03.</div>'+
+    '<button class="btn gelb" onclick="testLauf(2)">'+svgIc('play2')+' Übungs-Mix — 30 Fragen, 15 Min</button>'+
+    '<div class="planhinweis" style="margin:4px 0 0">Nur Katalog-Fragen locker gemischt (ohne Zusatz-Stoff). Bestwert wird gespeichert.</div></div>';
   const best = testBest();
   if (best) h += '<div class="karte"><div class="farbe">Dein Bestwert (Übungs-Mix)</div><div class="stat">Note '+best.note+' · '+best.pct+' %</div></div>';
   $('scr-test').innerHTML = h;
@@ -846,7 +866,7 @@ function testAusw(){
     '<div class="fehler-row"><div class="farbe r" style="margin-bottom:6px">'+esc(x.src)+'</div><b>'+x.f+'</b><br>'+
     'Deine Antwort: '+esc(x.deine)+'<br>✅ Richtig: <b>'+esc(x.r)+'</b><br><span class="stat">'+x.e+'</span></div>').join('')+'</div>'
     : '<div class="stat" style="text-align:center;margin-top:8px">Keine Fehler — sauber! 🎖️</div>';
-  const hint = '<div class="merkkachel" style="margin:12px 0">🎒 Die '+fehler.length+' falschen Fragen sind automatisch in den <b>Fehlerrucksack</b> gewandert — gezielt nachholen, bis sie sitzen.</div>';
+  const hint = fehler.length ? '<div class="merkkachel" style="margin:12px 0">🎒 Die '+fehler.length+' falschen '+(fehler.length===1?'Frage ist':'Fragen sind')+' automatisch in den <b>Fehlerrucksack</b> gewandert — gezielt nachholen, bis sie sitzen.</div>' : '';
   $('scr-test').innerHTML =
     '<div class="mod-head"><button class="mod-back" onclick="go(\'dash\')" aria-label="Zurück">'+svgIc('back')+'</button><h2 style="font-size:1.18em">Test-Auswertung</h2></div>'+
     '<div class="karte" style="text-align:center"><div class="ende-hero"><div class="note" style="color:'+farbe+'">'+note+'</div>'+
@@ -933,3 +953,5 @@ function confetti(n){
 
 /* ---------- Boot ---------- */
 window.addEventListener('load', boot);
+/* Mobile Nav: bei Resize neu rendern (Punkt-Anzahl hängt von Breite ab) */
+window.addEventListener('resize', function(){ renderNavi(); });
