@@ -78,10 +78,29 @@ h1 .hl{ color:var(--rot); }
   font-weight:700; font-size:.92em; border-radius:var(--r);
   transition:border-color .15s, color .15s;
 }
+/* Jugend/Aktiv-Modus-Umschalter: breiter Text-Knopf nach demselben Button-System (41px Höhe). */
+.modus-btn{
+  height:41px; padding:0 14px; border:1px solid var(--linie); background:var(--flaeche); color:var(--text);
+  display:flex; align-items:center; justify-content:center; cursor:pointer;
+  font-weight:700; font-size:.92em; border-radius:var(--r); font-family:inherit;
+  transition:border-color .15s, color .15s, background .15s;
+}
+.modus-btn:hover{ border-color:var(--rot); color:var(--rot); }
+.modus-btn.modus-jugend{ border-color:var(--gruen-stark); color:var(--gruen-stark); background:color-mix(in srgb, var(--gruen-stark) 8%, var(--flaeche)); }
+.modus-btn.modus-jugend:hover{ background:color-mix(in srgb, var(--gruen-stark) 15%, var(--flaeche)); }
+  width:41px; height:41px; border:1px solid var(--linie); background:var(--flaeche); color:var(--text);
+  display:flex; align-items:center; justify-content:center;
+  font-weight:700; font-size:.92em; border-radius:var(--r);
+  transition:border-color .15s, color .15s;
+}
 .theme-btn:hover, .fontscale-btn:hover{ border-color:var(--rot); color:var(--rot); }
 .theme-btn svg{ width:19px; height:19px; }
 @media (max-width:700px){
-  .kopf-btns{ position:static; margin-top:12px; justify-content:flex-start; }
+  /* Jugend/Aktiv-Knopf: Header-Untertitel darf nicht unterlaufen werden */
+  .modus-btn{ height:37px; padding:0 10px; font-size:.85em; }
+  .theme-btn, .fontscale-btn{ width:37px; height:37px; }
+
+  .kopf-btns{ position:static; margin-top:12px; justify-content:flex-end; }
 }
 
 /* ---------- Navigation (OOELFV: uppercase, rote Achse) ---------- */

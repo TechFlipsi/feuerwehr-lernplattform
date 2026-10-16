@@ -60,6 +60,31 @@ function fontScaleSet(n){
 }
 function fontScaleInit(){ fontScaleSet(parseInt(localStorage.getItem('fw_font')||'0',10)); }
 
+/* ---------- Jugend / Aktiver Dienst (Modus-Umschalter) ---------- */
+function modusSet(m){
+  localStorage.setItem('fw_modus', m);
+  const b = $('modusBtn');
+  if (b){
+    b.textContent = m==='jugend' ? 'Jugend' : 'Aktiv';
+    b.classList.toggle('modus-jugend', m==='jugend');
+  }
+  document.documentElement.setAttribute('data-modus', m);
+  const ak = $('scr-'+akt);
+  if (akt==='home') zeigeHome();
+  else if (akt==='themen') zeigeThemen();
+  else if (ak && ak.classList.contains('versteckt')===false) {} /* Paket-Screens bleiben */
+}
+function modusGet(){ const m = localStorage.getItem('fw_modus'); return m==='jugend' ? 'jugend' : 'aktiv'; }
+function modusToggle(){ modusSet(modusGet()==='jugend' ? 'aktiv' : 'jugend'); toast('Modus: '+(modusGet()==='jugend'?'Feuerwehrjugend':'Aktiver Dienst')); }
+function modusInit(){ modusSet(modusGet()); }
+/* Zielgruppen-Filter: Paket ohne passendes zielgruppe wird im aktuellen Modus ausgeblendet. */
+function paketPasstZurZielgruppe(meta){
+  const zg = (meta && meta.zielgruppe) || 'aktiv';
+  if (zg==='beide') return true;
+  return zg === modusGet();
+}
+
+
 /* ---------- Streak · XP · Rang · Badges ---------- */
 const RAENGE = [
   [0,'Rekrut'],[100,'Feuerwehrmann'],[300,'Löschmeister'],[600,'Hauptlöschmeister'],
@@ -173,7 +198,7 @@ function boot(){
   MANIFEST.forEach(m => {
     if (window[m.objekt]) { PAKETE_MAP[m.id] = { meta:m, data:window[m.objekt] }; }
   });
-  themeInit(); fontScaleInit();
+  themeInit(); fontScaleInit(); modusInit();
   /* Wappen: echtes OOELFV-Emblem als <img> im HTML */
   go('home');
 }
@@ -271,6 +296,8 @@ function zeigeHome(){
     '<div class="stat" style="text-align:left">Oben rechts stellst du mit dem <b>A-Knopf</b> die Schriftgröße ein. '+
     'Drei Stufen, ein Klick pro Stufe: normal, größer, am größten fürs Handy im Einsatz oder bei schlechtem Licht. '+
     'Die Wahl wird gespeichert und bleibt für den nächsten Besuch.</div></div>'+
+    '<div class="karte"><div class="farbe">Jugend · Aktiver Dienst</div>'+
+    '<div class="stat" style="text-align:left">Der Knopf daneben schaltet zwischen <b>Jugend</b> (Erprobungen, Wissenstest, FJLA) und <b>Aktiver Dienst</b> (Grundlehrgang, TRF-A, Leistungsprüfungen) um. Der Laufbahn-Pfad und die Lernthemen passen sich sofort an — gemacht für Mischwehre mit jugendlichen und aktiven Mitgliedern.</div></div>'+
     '<div class="karte"><div class="farbe">Hell · Dunkel</div>'+
     '<div class="stat" style="text-align:left">Der Mondknopf daneben schaltet zwischen hellem Tag-Design und dunklem Nacht-Design. '+
     'Beide sind aufs OÖLFV-Rot abgestimmt und bleiben gespeichert.</div></div>'+
@@ -284,14 +311,19 @@ function zeigeThemen(){
     '<p class="stat" style="text-align:left">Jedes Thema ist ein Paket: Kachel anklicken → Überblick, Karten, Quiz, Prüfung, Katalog und Unterlagen.</p>'+
     /* Laufbahn-Pfad nach der offiziellen Oö.-Ausbildungsreihenfolge (OÖLFV-Ausbildungsmodell):
        Grundausbildung → Grundlehrgang 001 → Truppführer (01B9) → Funk/Maschinist/AtGs parallel → Führung. */
-    '<div class="laufbahn">'+
+    '<div class="laufbahn">'+(modusGet()==='jugend' ?
+    '<div class="lb-schritt lb-aktiv"><span class="lb-nr">1</span><div><b>Erprobung 1 · Feuerwehr-Kennen lernen</b><div class="lb-note">Organisation, Verhalten, Erste-Hilfe-Basics — Paket folgt</div></div></div>'+
+    '<div class="lb-schritt"><span class="lb-nr">2</span><div><b>Erprobungen 2–5 · Geräte & Einsatztätigkeit</b><div class="lb-note">Knoten, Schlauchleiter, Löschangriff — Paket folgt</div></div></div>'+
+    '<div class="lb-schritt"><span class="lb-nr">3</span><div><b>Wissenstest Bronze/Silber/Gold</b><div class="lb-note">5 Stationen je Stufe — <a href="#" onclick="oeffnePaket(\'wissenstest\');return false">Paket öffnen</a></div></div></div>'+
+    '<div class="lb-schritt"><span class="lb-nr">4</span><div><b>FJLA Bronze/Silber/Gold (Bewerb)</b><div class="lb-note">Jugend-Leistungsabzeichen — Paket folgt</div></div></div>'+
+    '<div class="lb-schritt"><span class="lb-nr">5</span><div><b>Wechsel zum aktiven Dienst</b><div class="lb-note">Mit 18: Grundausbildung → Grundlehrgang (001) → Laufbahn des aktiven Dienstes</div></div></div>' :
     '<div class="lb-schritt lb-aktiv"><span class="lb-nr">1</span><div><b>Grundausbildung in der Feuerwehr</b><div class="lb-note">80 Einheiten + Erste-Hilfe — in der Wehr, Basis für alles</div></div></div>'+
     '<div class="lb-schritt"><span class="lb-nr">2</span><div><b>Grundlehrgang · Abschluss Truppmann (001)</b><div class="lb-note">2 Tage, Bezirk — Paket folgt</div></div></div>'+
     '<div class="lb-schritt lb-aktiv"><span class="lb-nr">3</span><div><b>Truppführer-Ausbildung & Prüfung (TRF-A · 189)</b><div class="lb-note">7 Module in der Wehr, Prüfung am Abschnitt — <a href="#" onclick="oeffnePaket(\'trfa\');return false">Paket öffnen</a></div></div></div>'+
     '<div class="lb-schritt"><span class="lb-nr">4</span><div><b>Fachlehrgänge parallel möglich</b><div class="lb-note">Funk (005), TS-Maschinist (012), Atemschutz — Pakete folgen</div></div></div>'+
-    '<div class="lb-schritt"><span class="lb-nr">5</span><div><b>Führungslaufbahn</b><div class="lb-note">Führen I → II → Einsatzleiter → Kommandant — Pakete folgen</div></div></div>'+
+    '<div class="lb-schritt"><span class="lb-nr">5</span><div><b>Führungslaufbahn</b><div class="lb-note">Führen I → II → Einsatzleiter → Kommandant — Pakete folgen</div></div></div>')+
     '</div>';
-  h += '<div class="paket-grid">'+MANIFEST.map(m=>{
+  h += '<div class="paket-grid">'+MANIFEST.filter(m=>paketPasstZurZielgruppe(m)).map(m=>{
     const pk = PAKETE_MAP[m.id];
     const p = pk && pk.data;
     const st = p ? p.stats : null;
