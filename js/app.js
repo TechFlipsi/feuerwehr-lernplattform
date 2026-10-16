@@ -257,7 +257,7 @@ function zeigeHome(){
   const s = aktivInfo();
   let h =
     '<div class="karte hero"><div class="farbe r">Ausbildung · Handzettel-Prinzip</div>'+
-    '<div class="frage" style="font-size:1.22em">Feuerwehr-Ausbildung zum Erlernen — so wie Lernen 2026 wirklich funktioniert.</div>'+
+    '<div class="frage" style="font-size:1.22em">Die komplette Feuerwehr-Ausbildung zum Erlernen — vom Grundlehrgang bis zur Führung, in der echten Reihenfolge.</div>'+
     '<p class="stat" style="margin-top:8px">Jeder Lehrgang ist ein Themen-Paket: Karte anklicken → alles zum Thema. Abfragen statt Lesen, kleine tägliche Sessions, sofortiges Feedback mit Erklärung. Fortschritt bleibt lokal auf deinem Gerät.</p></div>';
   if (s.xps>0 || Object.keys(s).length){
     const r = rangVon(s.xps);
@@ -281,7 +281,16 @@ function zeigeHome(){
 function zeigeThemen(){
   const zl = localStorage.getItem('fw_zuletzt');
   let h = '<div class="farbe hero-titel">Lernthemen</div>'+
-    '<p class="stat" style="text-align:left">Jedes Thema ist ein Paket: Kachel anklicken → Überblick, Karten, Quiz, Prüfung, Katalog und Unterlagen. Beim ersten Start ist die Technische Rettung (TRF-A) freigeschaltet.</p>';
+    '<p class="stat" style="text-align:left">Jedes Thema ist ein Paket: Kachel anklicken → Überblick, Karten, Quiz, Prüfung, Katalog und Unterlagen.</p>'+
+    /* Laufbahn-Pfad nach der offiziellen Oö.-Ausbildungsreihenfolge (OÖLFV-Ausbildungsmodell):
+       Grundausbildung → Grundlehrgang 001 → Truppführer (01B9) → Funk/Maschinist/AtGs parallel → Führung. */
+    '<div class="laufbahn">'+
+    '<div class="lb-schritt lb-aktiv"><span class="lb-nr">1</span><div><b>Grundausbildung in der Feuerwehr</b><div class="lb-note">80 Einheiten + Erste-Hilfe — in der Wehr, Basis für alles</div></div></div>'+
+    '<div class="lb-schritt"><span class="lb-nr">2</span><div><b>Grundlehrgang · Abschluss Truppmann (001)</b><div class="lb-note">2 Tage, Bezirk — Paket folgt</div></div></div>'+
+    '<div class="lb-schritt lb-aktiv"><span class="lb-nr">3</span><div><b>Truppführer-Ausbildung & Prüfung (TRF-A · 189)</b><div class="lb-note">7 Module in der Wehr, Prüfung am Abschnitt — <a href="#" onclick="oeffnePaket(\'trfa\');return false">Paket öffnen</a></div></div></div>'+
+    '<div class="lb-schritt"><span class="lb-nr">4</span><div><b>Fachlehrgänge parallel möglich</b><div class="lb-note">Funk (005), TS-Maschinist (012), Atemschutz — Pakete folgen</div></div></div>'+
+    '<div class="lb-schritt"><span class="lb-nr">5</span><div><b>Führungslaufbahn</b><div class="lb-note">Führen I → II → Einsatzleiter → Kommandant — Pakete folgen</div></div></div>'+
+    '</div>';
   h += '<div class="paket-grid">'+MANIFEST.map(m=>{
     const pk = PAKETE_MAP[m.id];
     const p = pk && pk.data;
@@ -302,7 +311,7 @@ function zeigeThemen(){
         : '<div class="planhinweis" style="margin-top:8px">Noch nicht begonnen</div>')+
       '<span class="pk-cta">'+(String(zl)===m.id?'Weitermachen':'Öffnen')+' '+svgIc('pfeil')+'</span></button>';
   }).join('')+'</div>';
-  h += '<div class="karte"><div class="farbe">Mehr folgt</div><div class="stat">Weitere Lehrgänge (Grundlehrgang, Funk, Atemschutz, …) kommen dazu — neue Themen erscheinen hier automatisch.</div></div>';
+  h += '<div class="karte"><div class="farbe">Reihenfolge & Freigabe</div><div class="stat">Die Plattform folgt der offiziellen Ausbildungs-Reihenfolge: Grundausbildung → Grundlehrgang → Truppführer → Fachlehrgänge/Führung. Gebaute Pakete sind verlinkt; die anderen erscheinen automatisch, sobald sie fertig sind.</div></div>';
   $('scr-themen').innerHTML = h;
 }
 
