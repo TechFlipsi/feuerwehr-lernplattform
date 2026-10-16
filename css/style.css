@@ -406,3 +406,8 @@ html[data-theme="dunkel"] .toast{ background:var(--flaeche-2); color:var(--text)
   *, *::before, *::after{ animation-duration:.001s !important; animation-iteration-count:1 !important; transition-duration:.001s !important; }
   html{ scroll-behavior:auto; }
 }
+/* Große Lern-Kapitel: Gruppenköpfe über den Paket-Kacheln */
+.tg-head{ display:flex; align-items:baseline; gap:10px; margin:26px 0 10px; flex-wrap:wrap; }
+.tg-head b{ font-family:var(--mont, 'Montserrat'), sans-serif; letter-spacing:.02em; text-transform:uppercase; font-size:1.05em; }
+.tg-head .tg-note{ color:var(--text-2, #6b7275); font-size:.83em; }
+.tg-head::before{ content:''; display:inline-block; width:6px; height:18px; background:var(--rot); border-radius:2px; margin-right:2px; }

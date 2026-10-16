@@ -305,6 +305,50 @@ function zeigeHome(){
   h += tipps_und_faq();
   $('scr-home').innerHTML = h;
 }
+
+/* ---------- Große Lern-Kapitel (Katalogisierung der Pakete) ---------- */
+const THEMEN_GRUPPEN = [
+  { key:'grundlage', name:'Grundausbildung & Grundlehrgang', note:'Basis für jedes aktive Mitglied: Truppmann (001) + Refresher-Prüfungsformat', ids:['trm'] },
+  { key:'trupa', name:'Truppführer-Ausbildung (189)', note:'6 Module bis zur Abschnittsprüfung: Katalog + Praxis + Simulation', ids:['trfa'] },
+  { key:'fach', name:'Fach- & Zusatzqualifikationen', note:'Parallel möglich: Funk (005), Verkehrsregler (195), Feuerwehrführerschein', ids:['funk','verkehrsregler','fw-fuehrerschein'] },
+  { key:'pruef', name:'Leistungsprüfungen (LPR)', note:'Atemschutz, Sanität, Funk FKAE, FLA Gold — je Bronze/Silber/Gold', ids:['lpr-as','san-lp','fkae-bronze','fla-gold'] },
+  { key:'fuehrung', name:'Führungslaufbahn', note:'Führen I → II → Einsatzleiter → Kommandant — Pakete folgen (LFS-intern), Zugang via Refresher im Grundlehrgang', ids:[] },
+  { key:'jugend', name:'Feuerwehrjugend', note:'Erprobungen 1–5 → Wissenstest Bronze/Silber/Gold — der Weg bis zum aktiven Dienst', ids:['erprobungen','wissenstest'] }
+];
+function kachelIdPasst(gid, m){ return gids(gid).indexOf(m.id)>=0; }
+function gids(k){ const g=THEMEN_GRUPPEN.find(g=>g.key===k); return g?g.ids:[]; }
+function renderPaketGruppen(modus, zl){
+  let h = '';
+  THEMEN_GRUPPEN.forEach(g=>{
+    const pakete = MANIFEST.filter(m=>gids(g.key).indexOf(m.id)>=0 && paketPasstZurZielgruppe(m));
+    if (!pakete.length) return;
+    h += '<div class="tg-head"><b>'+g.name+'</b><span class="tg-note">'+g.note+'</span></div>';
+    h += '<div class="paket-grid">'+pakete.map(m=>{
+      const pk = PAKETE_MAP[m.id];
+      const p = pk && pk.data;
+      const st = p ? p.stats : null;
+      const gelesen = pk && p ? palettenProg(pk) : null;
+      return '<button class="paket-kachel" onclick="oeffnePaket(\''+m.id+'\')">'+
+        '<div class="pk-head">'+
+        '<span class="pk-icon" style="background:'+m.farbe+'22;color:'+m.farbe+';box-shadow:inset 0 0 0 1.5px '+m.farbe+'55">'+svgIc('test')+'</span>'+
+        '<div><div class="pk-sub">'+esc(m.untertitel)+'</div><h3>'+esc(m.titel)+'</h3></div></div>'+
+        '<p>'+esc(m.beschreibung)+'</p>'+
+        (st ? '<div class="chips-klein">'+
+          (st.theorie_katalog?'<span class="chip on">'+st.theorie_katalog+' Theorie</span>':'')+
+          (st.praxis?'<span class="chip on">'+st.praxis+' Praxis</span>':'')+
+          (st.karten?'<span class="chip on">'+st.karten+' Karten</span>':'')+
+          (st.unterlagen?'<span class="chip on">'+st.unterlagen+' Unterlagen</span>':'')+'</div>' : '')+
+        (gelesen ? '<div class="fbalk gruen" style="margin-top:10px"><i style="width:'+gelesen.pct+'%"></i></div>'+
+          '<div class="planhinweis">'+(gelesen.pct>0
+            ? '<b>'+gelesen.sitzen+'</b> von '+gelesen.gesamt+' Karten sitzen ('+gelesen.pct+' %)'
+            : 'Noch nicht begonnen — <b>'+(gelesen.gesamt)+' Karten</b> warten auf dich')+'</div>'
+          : '<div class="planhinweis" style="margin-top:8px">Noch nicht begonnen</div>')+
+        '<span class="pk-cta">'+(zl===m.id?'Weitermachen':'Öffnen')+' '+svgIc('pfeil')+'</span></button>';
+    }).join('')+'</div>';
+  });
+  return h;
+}
+
 function zeigeThemen(){
   const zl = localStorage.getItem('fw_zuletzt');
   let h = '<div class="farbe hero-titel">Lernthemen</div>'+
@@ -323,26 +367,8 @@ function zeigeThemen(){
     '<div class="lb-schritt"><span class="lb-nr">4</span><div><b>Fachlehrgänge parallel möglich</b><div class="lb-note">Funk (005), TS-Maschinist (012), Atemschutz — Pakete folgen</div></div></div>'+
     '<div class="lb-schritt"><span class="lb-nr">5</span><div><b>Führungslaufbahn</b><div class="lb-note">Führen I → II → Einsatzleiter → Kommandant — Pakete folgen</div></div></div>')+
     '</div>';
-  h += '<div class="paket-grid">'+MANIFEST.filter(m=>paketPasstZurZielgruppe(m)).map(m=>{
-    const pk = PAKETE_MAP[m.id];
-    const p = pk && pk.data;
-    const st = p ? p.stats : null;
-    const gelesen = pk && p ? palettenProg(pk) : null;
-    return '<button class="paket-kachel" onclick="oeffnePaket(\''+m.id+'\')">'+
-      '<div class="pk-head">'+
-      '<span class="pk-icon" style="background:'+m.farbe+'22;color:'+m.farbe+';box-shadow:inset 0 0 0 1.5px '+m.farbe+'55">'+svgIc('test')+'</span>'+
-      '<div><div class="pk-sub">'+esc(m.untertitel)+'</div><h3>'+esc(m.titel)+'</h3></div></div>'+
-      '<p>'+esc(m.beschreibung)+'</p>'+
-      (st ? '<div class="chips-klein">'+
-        '<span class="chip on">'+st.theorie_katalog+' Theorie</span><span class="chip on">'+st.praxis+' Praxis</span>'+
-        '<span class="chip on">'+st.karten+' Karten</span><span class="chip on">'+st.unterlagen+' Unterlagen</span></div>' : '')+
-      (gelesen ? '<div class="fbalk gruen" style="margin-top:10px"><i style="width:'+gelesen.pct+'%"></i></div>'+
-        '<div class="planhinweis">'+(gelesen.pct>0
-          ? '<b>'+gelesen.sitzen+'</b> von '+gelesen.gesamt+' Karten sitzen ('+gelesen.pct+' %)'
-          : 'Noch nicht begonnen — <b>'+(gelesen.gesamt)+' Karten</b> warten auf dich')+'</div>'
-        : '<div class="planhinweis" style="margin-top:8px">Noch nicht begonnen</div>')+
-      '<span class="pk-cta">'+(String(zl)===m.id?'Weitermachen':'Öffnen')+' '+svgIc('pfeil')+'</span></button>';
-  }).join('')+'</div>';
+  h += renderPaketGruppen(modusGet(), String(zl));
+  const _oldGrid = null;
   h += '<div class="karte"><div class="farbe">Reihenfolge & Freigabe</div><div class="stat">Die Plattform folgt der offiziellen Ausbildungs-Reihenfolge: Grundausbildung → Grundlehrgang → Truppführer → Fachlehrgänge/Führung. Gebaute Pakete sind verlinkt; die anderen erscheinen automatisch, sobald sie fertig sind.</div></div>';
   $('scr-themen').innerHTML = h;
 }

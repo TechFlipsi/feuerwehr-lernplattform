@@ -1,5 +1,18 @@
 window.FW_PAKETE = [
  {
+  "id": "trm",
+  "datei": "pakete/trm.js",
+  "objekt": "PAKET_TRM",
+  "kurz": "TRM",
+  "titel": "Grundlehrgang",
+  "untertitel": "Abschluss Truppmann (001)",
+  "farbe": "#2f6f8f",
+  "icon": "test",
+  "zielgruppe": "aktiv",
+  "gruppe": "grundlage",
+  "beschreibung": "Die komplette Truppmann-Lernunterlage (v08, 178 S., 13 Kapitel) als Fragen- und Kartenset — Basis für jeden Aktiven, inkl. Refresher-Prüfungsformat (30 Fragen/30 Min/80 %)."
+ },
+ {
   "id": "trfa",
   "datei": "pakete/trfa.js",
   "objekt": "PAKET_TRFA",
@@ -9,31 +22,34 @@ window.FW_PAKETE = [
   "farbe": "#cf4025",
   "icon": "rettung",
   "zielgruppe": "aktiv",
-  "beschreibung": "Prüfungsvorbereitung nach Prüfungsordnung v03 (OÖLFV): 6 Gebiete, Katalogfragen + Zusatz-Stoff aus den OÖLFS-Handzetteln, Praxis-Aufgaben, Lernkarten (Leitner), Prüfungssimulation."
+  "beschreibung": "Prüfungsvorbereitung nach Prüfungsordnung v03 (OÖLFV): 6 Gebiete, Katalogfragen + Zusatz-Stoff aus den OÖLFS-Handzetteln, Praxis-Aufgaben, Lernkarten (Leitner), Prüfungssimulation.",
+  "gruppe": "trupa"
  },
  {
-  "id": "wissenstest",
-  "datei": "pakete/wissenstest.js",
-  "objekt": "FW_PAKET_wissenstest",
-  "kurz": "Wissenstest",
-  "titel": "Wissenstest",
-  "untertitel": "Feuerwehrjugend · Bronze/Silber/Gold",
-  "farbe": "#2e7d43",
-  "icon": "test",
-  "zielgruppe": "jugend",
-  "beschreibung": "Offizieller Wissenstest der Feuerwehrjugend OÖ: alle Stationen Bronze, Silber und Gold mit echten Fragen und Lösungen aus den OÖLFV-Katalogen — Stations-Quiz, Lernkarten, Merkhilfen und alle Unterlagen."
+  "id": "funk",
+  "datei": "pakete/funk.js",
+  "objekt": "PAKET_FUNK",
+  "kurz": "Funk",
+  "titel": "Funklehrgang",
+  "untertitel": "Lehrgang 005 · Digitalfunk",
+  "farbe": "#7c5cd4",
+  "icon": "funk",
+  "zielgruppe": "aktiv",
+  "gruppe": "fach",
+  "beschreibung": "Komplette Lernunterlage Funk (v03, 123 S., 10 Kapitel) + Digitalfunk-Grundschule: Funkordnung, Gerätekunde, WAS, Lotsen-/Nachrichtendienst, EFU, Kartenkunde — mit Buchstabiertafel und Statusmeldungen als Merkhilfen."
  },
  {
-  "id": "erprobungen",
-  "datei": "pakete/erprobungen.js",
-  "objekt": "FW_PAKET_erprobungen",
-  "kurz": "Erprobungen",
-  "titel": "Erprobungen 1–5",
-  "untertitel": "Feuerwehrjugend · Grundausbildung",
-  "farbe": "#b8860b",
-  "icon": "test",
-  "zielgruppe": "jugend",
-  "beschreibung": "Die 5 Erprobungsstufen der Feuerwehrjugend als Lernpfad: 38 Kapitel mit Selbsttest-Fragen direkt aus den offiziellen Kapitel-PDFs, Lernkarten und Unterlagen."
+  "id": "verkehrsregler",
+  "datei": "pakete/verkehrsregler.js",
+  "objekt": "PAKET_VR",
+  "kurz": "Verkehrsregler",
+  "titel": "Verkehrsregler",
+  "untertitel": "Ausbildung 195 · Straßenabsicherung",
+  "farbe": "#c47f17",
+  "icon": "zettel",
+  "zielgruppe": "aktiv",
+  "gruppe": "fach",
+  "beschreibung": "Kompletter öffentlicher Ausbildungssatz (RL, Presentation, Trockentraining, Kreuzungsregelung, wechselseitiges Anhalten): Armzeichen, Rechtsgrundlagen §44b StVO, Absicherung — 102 Fragen inkl. Armzeichen-Merkhilfe."
  },
  {
   "id": "lpr-as",
@@ -45,7 +61,8 @@ window.FW_PAKETE = [
   "farbe": "#2e7d43",
   "icon": "test",
   "zielgruppe": "aktiv",
-  "beschreibung": "LPR Atemschutz: kompletter Bronze-Fragenkatalog (3×30 Fragen mit Lösungen) + Gold-Kataloge A–D, ASÜ-Formular-Links und Prüfungsformate laut RL 4.3.003."
+  "beschreibung": "LPR Atemschutz: kompletter Bronze-Fragenkatalog (3×30 Fragen mit Lösungen) + Gold-Kataloge A–D, ASÜ-Formular-Links und Prüfungsformate laut RL 4.3.003.",
+  "gruppe": "pruef"
  },
  {
   "id": "san-lp",
@@ -57,7 +74,8 @@ window.FW_PAKETE = [
   "farbe": "#0e7490",
   "icon": "rettung",
   "zielgruppe": "aktiv",
-  "beschreibung": "SAN-Leistungsprüfung: 60-Fragen-Pool mit allen offiziellen Lösungen, Stufenformate Bronze/Silber/Gold (20/30/40 Fragen) laut RL 4.3.048 — Theorie-Simulation + Lernkarten."
+  "beschreibung": "SAN-Leistungsprüfung: 60-Fragen-Pool mit allen offiziellen Lösungen, Stufenformate Bronze/Silber/Gold (20/30/40 Fragen) laut RL 4.3.048 — Theorie-Simulation + Lernkarten.",
+  "gruppe": "pruef"
  },
  {
   "id": "fkae-bronze",
@@ -69,7 +87,8 @@ window.FW_PAKETE = [
   "farbe": "#8a5cf6",
   "icon": "funk",
   "zielgruppe": "aktiv",
-  "beschreibung": "FKAE Bronze Station 1: alle 52 Fragen mit Lösungen aus dem offiziellen Katalog — die Theorie-Basis der Funkleistungsprüfung (Stationen 2–5 praktisch, als Unterlagen)."
+  "beschreibung": "FKAE Bronze Station 1: alle 52 Fragen mit Lösungen aus dem offiziellen Katalog — die Theorie-Basis der Funkleistungsprüfung (Stationen 2–5 praktisch, als Unterlagen).",
+  "gruppe": "pruef"
  },
  {
   "id": "fla-gold",
@@ -81,7 +100,8 @@ window.FW_PAKETE = [
   "farbe": "#b3121f",
   "icon": "test",
   "zielgruppe": "aktiv",
-  "beschreibung": "FLA Gold Disziplin 5: 122-Fragen-Pool mit Lösungen, Prüfungspakete à 15 Fragen (mind. 16 Punkte) — exakt wie bei der offiziellen Prüfung laut DA 4.3.028."
+  "beschreibung": "FLA Gold Disziplin 5: 122-Fragen-Pool mit Lösungen, Prüfungspakete à 15 Fragen (mind. 16 Punkte) — exakt wie bei der offiziellen Prüfung laut DA 4.3.028.",
+  "gruppe": "pruef"
  },
  {
   "id": "fw-fuehrerschein",
@@ -93,6 +113,33 @@ window.FW_PAKETE = [
   "farbe": "#5a6ad4",
   "icon": "zettel",
   "zielgruppe": "aktiv",
-  "beschreibung": "Feuerwehrführerschein: kompletter Prüfungsgespräch-Fragenkatalog aus der Anlage zum Ausbildungsplan 6.11.002 (84 Fragen) + Fahrlektionen und Merkhilfen."
+  "beschreibung": "Feuerwehrführerschein: kompletter Prüfungsgespräch-Fragenkatalog aus der Anlage zum Ausbildungsplan 6.11.002 (84 Fragen) + Fahrlektionen und Merkhilfen.",
+  "gruppe": "fach"
+ },
+ {
+  "id": "wissenstest",
+  "datei": "pakete/wissenstest.js",
+  "objekt": "FW_PAKET_wissenstest",
+  "kurz": "Wissenstest",
+  "titel": "Wissenstest",
+  "untertitel": "Feuerwehrjugend · Bronze/Silber/Gold",
+  "farbe": "#2e7d43",
+  "icon": "test",
+  "zielgruppe": "jugend",
+  "beschreibung": "Offizieller Wissenstest der Feuerwehrjugend OÖ: alle Stationen Bronze, Silber und Gold mit echten Fragen und Lösungen aus den OÖLFV-Katalogen — Stations-Quiz, Lernkarten, Merkhilfen und alle Unterlagen.",
+  "gruppe": "jugend"
+ },
+ {
+  "id": "erprobungen",
+  "datei": "pakete/erprobungen.js",
+  "objekt": "FW_PAKET_erprobungen",
+  "kurz": "Erprobungen",
+  "titel": "Erprobungen 1–5",
+  "untertitel": "Feuerwehrjugend · Grundausbildung",
+  "farbe": "#b8860b",
+  "icon": "test",
+  "zielgruppe": "jugend",
+  "beschreibung": "Die 5 Erprobungsstufen der Feuerwehrjugend als Lernpfad: 38 Kapitel mit Selbsttest-Fragen direkt aus den offiziellen Kapitel-PDFs, Lernkarten und Unterlagen.",
+  "gruppe": "jugend"
  }
 ];
