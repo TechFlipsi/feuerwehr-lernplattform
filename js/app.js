@@ -979,7 +979,7 @@ function zSearch(v){
    ============================================================ */
 function initUnlagen(){
   const d = paketAktiv.data;
-  const base = d.unterlagen_base || 'https://wiki.feuerwehr-walding.at/lib/exe/fetch.php?media=';
+  const base = (d.unterlagen_base!==undefined && d.unterlagen_base!==null) ? d.unterlagen_base : 'https://wiki.feuerwehr-walding.at/lib/exe/fetch.php?media=';
   let h = '<div class="mod-head"><button class="mod-back" onclick="go(\'dash\')" aria-label="Zurück">'+svgIc('back')+'</button><h2 style="font-size:1.18em">Unterlagen</h2></div>'+
     '<div class="karte"><div class="farbe">Offizielle OÖLFS-Schulungs-PDFs</div>'+
     '<div class="frage">Handzettel + Präsentationen zu den Modulen (Quelle: Oö. Landes-Feuerwehrschule).</div>'+
