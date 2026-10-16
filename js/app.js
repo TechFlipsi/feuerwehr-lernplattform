@@ -32,19 +32,19 @@ const ICONS = {
   check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>'
 };
 function svgIc(name){ return ICONS[name]||ICONS.paket; }
-const WAPPEN = '<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><path d="M32 4 L58 14 v13 c0 17-11 27.5-26 32.5 C17 54.5 6 44 6 27 V14 Z" fill="#c62828" stroke="#7f1010" stroke-width="2.5"/><path d="M38.5 24.5 c0-3.8-1.4-7.2-3.8-9.6.5 3.3-.65 5.2-2.35 7.1-2 2.2-3.4 4.6-3.4 7.9 0 0-2.35-1.9-3.3-4.25-2.3 2.65-3.65 5.55-3.65 8.85 0 5.7 4.3 10 9.55 10 a9.85 9.85 0 0 0 9.9-9.9 c0-4.3-1.45-7.65-2.95-10.1z" fill="#ffd54f"/><circle cx="31.7" cy="35.6" r="4.1" fill="#c62828"/></svg>';
+const WAPPEN = '<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><path d="M32 4 L58 14 v13 c0 17-11 27.5-26 32.5 C17 54.5 6 44 6 27 V14 Z" fill="#b3121f" stroke="#7f1010" stroke-width="2.5"/><path d="M38.5 24.5 c0-3.8-1.4-7.2-3.8-9.6.5 3.3-.65 5.2-2.35 7.1-2 2.2-3.4 4.6-3.4 7.9 0 0-2.35-1.9-3.3-4.25-2.3 2.65-3.65 5.55-3.65 8.85 0 5.7 4.3 10 9.55 10 a9.85 9.85 0 0 0 9.9-9.9 c0-4.3-1.45-7.65-2.95-10.1z" fill="#e8b93a"/><circle cx="31.7" cy="35.6" r="4.1" fill="#b3121f"/></svg>';
 
 /* ---------- Theme & Schriftgröße ---------- */
 function themeSet(t){
   if (t) document.documentElement.setAttribute('data-theme', t);
   else document.documentElement.removeAttribute('data-theme');
   try{ localStorage.setItem('fw_theme', t||''); }catch(e){}
-  const b = $('themeBtn'); if (b) b.innerHTML = t==='hell' ? ICONS.sonne : ICONS.mond;
+  const b = $('themeBtn'); if (b) b.innerHTML = t==='dunkel' ? ICONS.sonne : ICONS.mond;
 }
-function themeToggle(){ themeSet(document.documentElement.getAttribute('data-theme')==='hell' ? '' : 'hell'); }
+function themeToggle(){ themeSet(document.documentElement.getAttribute('data-theme')==='dunkel' ? '' : 'dunkel'); }
 function themeInit(){
   const saved = localStorage.getItem('fw_theme');
-  themeSet(saved==='hell' ? 'hell' : '');
+  themeSet(saved==='dunkel' ? 'dunkel' : '');
 }
 const FONT_STUFEN = ['A','A+','A++'];
 function fontScaleCycle(){
@@ -227,7 +227,7 @@ function zeigeHome(){
   const zl = localStorage.getItem('fw_zuletzt');
   const s = aktivInfo();
   let h =
-    '<div class="karte hero"><div class="farbe r">Leitstelle · Ausbildung online</div>'+
+    '<div class="karte hero"><div class="farbe r">Ausbildung · Handzettel-Prinzip</div>'+
     '<div class="frage" style="font-size:1.22em">Feuerwehr-Ausbildung zum Erlernen — so wie Lernen 2026 wirklich funktioniert.</div>'+
     '<p class="stat" style="margin-top:8px">Jeder Lehrgang ist ein Themen-Paket: Karte anklicken → alles zum Thema. Abfragen statt Lesen, kleine häppchenweise Sessions, sofortiges Feedback mit Erklärung. Fortschritt bleibt lokal auf deinem Gerät.</p></div>';
   if (s.xps>0 || Object.keys(s).length){
@@ -332,7 +332,7 @@ function zeigeDash(){
         : '<div class="zahlen">Leer — jede falsche Antwort landet hier zum gezielten Wiederholen.</div>')+
       '<div class="geb-acts"><button class="btn klein'+(rucksackN()===0?'':' gelb')+'" '+(rucksackN()===0?'disabled':'')+' onclick="quizRucksack()">'+svgIc('rucksack')+' Abfragen</button></div></div>'+
     '<div class="geb-karte"><div class="streifen" style="background:var(--blau)"></div>'+
-      '<div class="farbe" style="margin-bottom:6px;border-color:rgba(76,201,240,.4);background:rgba(76,201,240,.08);color:var(--blau)">Prüfungssimulation</div>'+
+      '<div class="farbe" style="margin-bottom:6px;color:var(--blau)">Prüfungssimulation</div>'+
       (testBest()
         ? '<div class="zahlen">Bestwert: Note '+testBest().note+' · '+testBest().pct+' %</div>'
         : '<div class="zahlen">Noch kein Test absolviert.</div>')+
@@ -503,6 +503,7 @@ function kStatusRo(){
   return { lev:kStatus.lev, due:kStatus.due, last:kStatus.last, tick:kStatus.tick };
 }
 function kartenRun(practice){
+  if (!kStatus.lev) kartenInit();
   kStatus.gestartet = true;
   kStatus.practice = (practice==='alle');
   zeigeKartenStart();
@@ -881,7 +882,7 @@ function confetti(n){
   const c = $('confetti-canvas'); if (!c) return;
   const ctx = c.getContext('2d');
   c.width = innerWidth; c.height = innerHeight;
-  const farben = ['#e63946','#ffc300','#4cc9f0','#2ec4b6','#f72585','#ff8a5c'];
+  const farben = ['#b3121f','#d9a514','#2e7d43','#1f5a8a','#8d5a2b','#3f454e'];
   const teile = [];
   for (let i=0;i<(n||80);i++) teile.push({
     x: innerWidth/2 + (Math.random()-0.5)*220, y: innerHeight*0.35,

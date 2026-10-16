@@ -6,21 +6,22 @@
 <meta name="description" content="Feuerwehr-Lernplattform: Lehrgänge digital lernen — Lernkarten (Leitner), Quiz mit Erklärung, Prüfungssimulation, offizielle Unterlagen.">
 <title>Feuerwehr-Lernplattform — Lehrgänge digital meistern</title>
 <link rel="stylesheet" href="css/style.css">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><path d='M32 4 L58 14 v13 c0 17-11 27.5-26 32.5 C17 54.5 6 44 6 27 V14 Z' fill='%23e63946'/></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><path d='M32 4 L58 14 v13 c0 17-11 27.5-26 32.5 C17 54.5 6 44 6 27 V14 Z' fill='%23b3121f'/></svg>">
 </head>
 <body>
 <div class="wrap">
   <header class="top">
-    <div class="warnband"></div>
+    
     <div class="logo-row">
       <span class="logo-wappen" id="wappen"></span>
       <h1>Feuerwehr-<span class="hl">Lernplattform</span></h1>
     </div>
     <div class="sub">Lehrgänge digital lernen — wissenschaftlich wirksam: Abfragen, verteilt üben, sofortiges Feedback</div>
-    <button class="theme-btn" id="themeBtn" onclick="themeToggle()" aria-label="Hell/Dunkel umschalten"></button>
+    <div class="kopf-btns">
+      <button class="fontscale-btn" id="fontBtn" onclick="fontScaleCycle()" aria-label="Schriftgröße umschalten">A</button>
+      <button class="theme-btn" id="themeBtn" onclick="themeToggle()" aria-label="Hell/Dunkel umschalten"></button>
+    </div>
   </header>
-
-  <button class="fontscale-btn" id="fontBtn" onclick="fontScaleCycle()" aria-label="Schriftgröße umschalten">A</button>
 
   <div class="navi" id="navi"></div>
 
