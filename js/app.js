@@ -32,7 +32,7 @@ const ICONS = {
   check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>'
 };
 function svgIc(name){ return ICONS[name]||ICONS.paket; }
-const WAPPEN = '<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><path d="M32 4 L58 14 v13 c0 17-11 27.5-26 32.5 C17 54.5 6 44 6 27 V14 Z" fill="#b3121f" stroke="#7f1010" stroke-width="2.5"/><path d="M38.5 24.5 c0-3.8-1.4-7.2-3.8-9.6.5 3.3-.65 5.2-2.35 7.1-2 2.2-3.4 4.6-3.4 7.9 0 0-2.35-1.9-3.3-4.25-2.3 2.65-3.65 5.55-3.65 8.85 0 5.7 4.3 10 9.55 10 a9.85 9.85 0 0 0 9.9-9.9 c0-4.3-1.45-7.65-2.95-10.1z" fill="#e8b93a"/><circle cx="31.7" cy="35.6" r="4.1" fill="#b3121f"/></svg>';
+const WAPPEN = '<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><path d="M32 4 L58 14 v13 c0 17-11 27.5-26 32.5 C17 54.5 6 44 6 27 V14 Z" fill="#cf4025" stroke="#8f2c17" stroke-width="2.5"/><path d="M38.5 24.5 c0-3.8-1.4-7.2-3.8-9.6.5 3.3-.65 5.2-2.35 7.1-2 2.2-3.4 4.6-3.4 7.9 0 0-2.35-1.9-3.3-4.25-2.3 2.65-3.65 5.55-3.65 8.85 0 5.7 4.3 10 9.55 10 a9.85 9.85 0 0 0 9.9-9.9 c0-4.3-1.45-7.65-2.95-10.1z" fill="#ffdd64"/><circle cx="31.7" cy="35.6" r="4.1" fill="#cf4025"/></svg>';
 
 /* ---------- Theme & Schriftgröße ---------- */
 function themeSet(t){
@@ -174,7 +174,7 @@ function boot(){
     if (window[m.objekt]) { PAKETE_MAP[m.id] = { meta:m, data:window[m.objekt] }; }
   });
   themeInit(); fontScaleInit();
-  $('wappen').innerHTML = WAPPEN;
+  /* Wappen: echtes OOELFV-Emblem als <img> im HTML */
   go('home');
 }
 const PAKETE_MAP = {};
@@ -882,7 +882,7 @@ function confetti(n){
   const c = $('confetti-canvas'); if (!c) return;
   const ctx = c.getContext('2d');
   c.width = innerWidth; c.height = innerHeight;
-  const farben = ['#b3121f','#d9a514','#2e7d43','#1f5a8a','#8d5a2b','#3f454e'];
+  const farben = ['#cf4025','#ffdd64','#e40521','#394348','#2e7d43','#ff6600'];
   const teile = [];
   for (let i=0;i<(n||80);i++) teile.push({
     x: innerWidth/2 + (Math.random()-0.5)*220, y: innerHeight*0.35,
