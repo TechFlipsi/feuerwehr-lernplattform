@@ -189,10 +189,10 @@ function paketZu(){ paketAktiv = null; go('home'); }
 
 /* ---------- Navigation ---------- */
 let akt = 'home';
-const SCREENS = ['home','dash','dashKarten','quiz','test','katalog','unlagen'];
+const SCREENS = ['home','themen','dash','dashKarten','quiz','test','katalog','unlagen'];
 function renderNavi(){
   const n = $('navi');
-  const items = [['home','Start','home']];
+  const items = [['home','Start','home'],['themen','Lernthemen','zettel']];
   if (paketAktiv){
     items.push(
       ['dash','Überblick','dash'],
@@ -211,6 +211,7 @@ function go(m){
   SCREENS.forEach(s=>{ const n=$('scr-'+s); if(n) n.classList.add('versteckt'); });
   const sc = $('scr-'+m); if (sc) sc.classList.remove('versteckt');
   if (m==='home') zeigeHome();
+  if (m==='themen') zeigeThemen();
   if (m==='dash') zeigeDash();
   if (m==='dashKarten' && paketAktiv) kartenInit();
   if (m==='quiz' && paketAktiv && !qStatus.l) quizStart();
@@ -223,6 +224,27 @@ function go(m){
 }
 
 /* ---------- Home (Paketwahl) ---------- */
+
+function tipps_und_faq(){
+  let t = '<div class="karte"><div class="farbe">Wie du hier am effektivsten lernst</div>'+
+    '<div class="stat" style="text-align:left">'+
+    '<b>1 · Täglich 10–15 Minuten schlagen Marathon.</b> Kurz und regelmäßig: das Tagespack auf dem Überblick bringt dich weiter als ein langer Block am Wochenende.'+
+    '<b>2 · Erst antworten, dann aufdecken.</b> Bei Karten und Quiz immer erst selbst in eigenen Worten antworten — genau dann entsteht Lernen.'+
+    '<b>3 · Fehler sind Treibstoff.</b> Falsche Fragen landen im Fehlerrucksack und kommen gezielt wieder — nicht bestraft, sondern geübt.'+
+    '<b>4 · Kurz vor der Prüfung:</b> Prüfungstag-Simulation unter echten Bedingungen (Zeitdruck, Mischung), dann gezielt den Fehlerrucksack abarbeiten.'+
+  '</div></div>';
+  t += '<details class="box"><summary>Warum funktioniert dieses System?</summary><div class="innen stat">'+
+    'Die Plattform baut auf den in der Lernforschung am besten belegten Techniken auf.'+
+    '<ul style="margin:8px 0 0;list-style:none">'+
+    '<li>🧠 <b>Abfragen (Retrieval Practice)</b> — Karten + Quiz erzwingen aktives Erinnern statt passivem Durchlesen.</li>'+
+    '<li>📅 <b>Verteiltes Wiederholen (Spaced Repetition)</b> — Leitner: richtige Karten kommen nach 1, 3, dann 7 Tagen wieder.</li>'+
+    '<li>🔀 <b>Mischen (Interleaving)</b> — Gebiete wechseln, damit das Gehirn unterscheiden lernt, nicht nur auswendig.</li>'+
+    '<li>💬 <b>Sofortiges Feedback mit Erklärung.</b></li>'+
+    '<li>🔥 <b>Streak + Tagespack</b> — Gewohnheit statt Motivation: 10 Minuten täglich halten nachweislich am längsten.</li>'+
+  '</ul></div></details>';
+  return t;
+}
+
 function zeigeHome(){
   const zl = localStorage.getItem('fw_zuletzt');
   const s = aktivInfo();
@@ -236,39 +258,45 @@ function zeigeHome(){
       '<div class="streak-box"><span class="flamme">🔥</span><div class="val">'+s.streak+' Tag'+(s.streak===1?'':'e')+'</div><div class="lbl">Lern-Streak</div></div>'+
       '<div class="streak-box"><span style="font-size:1.55em">⚡</span><div class="val">'+s.xps+' XP</div><div class="lbl">Rang: '+esc(r.name)+'</div></div></div>';
   }
+  h += '<div class="home-cta"><button class="btn gross" onclick="go(\'themen\')">Lernthemen öffnen '+svgIc('pfeil')+'</button></div>';
+  h += '<div class="home-erklaerung">'+
+    '<div class="karte"><div class="farbe">Die Schriftgröße A · A+ · A++</div>'+
+    '<div class="stat" style="text-align:left">Oben rechts stellst du mit dem <b>A-Knopf</b> die Schriftgröße ein. '+
+    'Drei Stufen, eine Pro-Klick: normal, größer, am größten fürs Handy am Kiosk oder bei schlechtem Licht. '+
+    'Die Wahl wird gespeichert und bleibt für den nächsten Besuch.</div></div>'+
+    '<div class="karte"><div class="farbe">Hell · Dunkel</div>'+
+    '<div class="stat" style="text-align:left">Der Mondknopf daneben schaltet zwischen hellem Tag-Design und dunklem Nacht-Design. '+
+    'Beide sind aufs OÖLFV-Rot abgestimmt und bleiben gespeichert.</div></div>'+
+  '</div>';
+  h += tipps_und_faq();
+  $('scr-home').innerHTML = h;
+}
+function zeigeThemen(){
+  const zl = localStorage.getItem('fw_zuletzt');
+  let h = '<div class="farbe hero-titel">Lernthemen</div>'+
+    '<p class="stat" style="text-align:left">Jedes Thema ist ein Paket: Kachel anklicken → Überblick, Karten, Quiz, Prüfung, Katalog und Unterlagen. Beim ersten Start ist die Technische Rettung (TRF-A) freigeschaltet.</p>';
   h += '<div class="paket-grid">'+MANIFEST.map(m=>{
-    const p = PAKETE_MAP[m.id] && PAKETE_MAP[m.id].data;
+    const pk = PAKETE_MAP[m.id];
+    const p = pk && pk.data;
     const st = p ? p.stats : null;
-    const gelesen = palettenProg(p);
+    const gelesen = pk && p ? palettenProg(pk) : null;
     return '<button class="paket-kachel" onclick="oeffnePaket(\''+m.id+'\')">'+
       '<div class="pk-head">'+
-      '<span class="pk-icon" style="background:'+m.farbe+'22;color:'+m.farbe+';box-shadow:inset 0 0 0 1.5px '+m.farbe+'55">'+svgIc(m.icon||'paket')+'</span>'+
+      '<span class="pk-icon" style="background:'+m.farbe+'22;color:'+m.farbe+';box-shadow:inset 0 0 0 1.5px '+m.farbe+'55">'+svgIc('test')+'</span>'+
       '<div><div class="pk-sub">'+esc(m.untertitel)+'</div><h3>'+esc(m.titel)+'</h3></div></div>'+
       '<p>'+esc(m.beschreibung)+'</p>'+
       (st ? '<div class="chips-klein">'+
         '<span class="chip on">'+st.theorie_katalog+' Theorie</span><span class="chip on">'+st.praxis+' Praxis</span>'+
         '<span class="chip on">'+st.karten+' Karten</span><span class="chip on">'+st.unterlagen+' Unterlagen</span></div>' : '')+
       (gelesen ? '<div class="fbalk gruen" style="margin-top:10px"><i style="width:'+gelesen.pct+'%"></i></div>'+
-        '<div class="planhinweis">'+gelesen.sitzen+' von '+gelesen.gesamt+' Karten sitzen</div>' : '')+
+        '<div class="planhinweis">'+gelesen.sitzen+' von '+gelesen.gesamt+' Karten sitzen'+(gelesen.pct>0?' ('+gelesen.pct+'%)':'')+'</div>'
+        : '<div class="planhinweis" style="margin-top:8px">Noch nicht begonnen</div>')+
       '<span class="pk-cta">'+(String(zl)===m.id?'Weitermachen':'Öffnen')+' '+svgIc('pfeil')+'</span></button>';
   }).join('')+'</div>';
-  h += '<div class="karte"><div class="farbe">Wie du hier am effektivsten lernst</div>'+
-    '<div class="stat" style="text-align:left">'+
-    '<b>1 · Täglich 10–15 Minuten schlagen Marathon.</b> Kurz und regelmäßig: das Tagespack auf dem Überblick bringt dich weiter als ein langes Mal.<br>'+
-    '<b>2 · Erst antworten, dann aufdecken.</b> Bei Karten und Quiz immer erst selbst in eigenen Worten antworten — genau das ist der wirksamste Lern-Effekt (Abfragen statt Lesen).<br>'+
-    '<b>3 · Fehler sind Treibstoff.</b> Falsche Fragen landen im Fehlerrucksack und kommen gezielt wieder — nicht bestraft, sondern gemerkt.<br>'+
-    '<b>4 · Kurz vor der Prüfung:</b> Prüfungstag-Simulation unter echten Bedingungen (Zeitdruck, Mischung), dann gezielt schwache Gebiete.</div></div>';
-  h += '<details class="box"><summary>Warum funktioniert dieses System?</summary><div class="innen stat">'+
-    'Die Plattform baut auf den in der Lernforschung am besten belegten Techniken auf (u. a. Meta-Analyse Dunlosky et al. — 242 Studien; Nature Reviews Psychology 2022):'+
-    '<ul style="margin:8px 0 0;list-style:none">'+
-    '<li>🧠 <b>Abfragen (Retrieval Practice)</b> — Karten + Quiz erzwingen aktives Erinnern statt passivem Durchlesen.</li>'+
-    '<li>📅 <b>Verteiltes Wiederholen (Spaced Repetition)</b> — Leitner: richtige Karten kommen nach 1, 3, dann 7 Tagen wieder; sitzt = 3× richtig mit Abstand.</li>'+
-    '<li>🔀 <b>Mischen (Interleaving)</b> — Gebiete wechseln, damit das Gehirn unterscheiden lernt, nicht nur auswendig.</li>'+
-    '<li>💬 <b>Sofortiges Feedback mit Erklärung.</b></li>'+
-    '<li>🔥 <b>Streak + Tagespack</b> — Gewohnheit statt Motivation: 10 Minuten täglich halten nachweislich am längsten durch.</li></ul></div></details>';
-  h += '<div class="karte"><div class="farbe">Ausblick</div><div class="stat">Weitere Lehrgänge (Grundlehrgang, Funk, …) kommen als eigene Pakete dazu — Struktur steht bereit.</div></div>';
-  $('scr-home').innerHTML = h;
+  h += '<div class="karte"><div class="farbe">Mehr folgt</div><div class="stat">Weitere Lehrgänge (Grundlehrgang, Funk, Atemschutz, …) kommen dazu — neue Themen erscheinen hier automatisch.</div></div>';
+  $('scr-themen').innerHTML = h;
 }
+
 /* ---------- Fortschritt pro Paket ---------- */
 function fortKey(id){ return 'fw_prog_' + id; }
 function progGet(id, n){
