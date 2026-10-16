@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="Feuerwehr-Lernplattform: Lehrgänge digital lernen — Lernkarten (Leitner), Quiz mit Erklärung, Prüfungssimulation, offizielle Unterlagen.">
+<title>Feuerwehr-Lernplattform — Lehrgänge digital meistern</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><path d='M32 4 L58 14 v13 c0 17-11 27.5-26 32.5 C17 54.5 6 44 6 27 V14 Z' fill='%23e63946'/></svg>">
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="warnband"></div>
+    <div class="logo-row">
+      <span class="logo-wappen" id="wappen"></span>
+      <h1>Feuerwehr-<span class="hl">Lernplattform</span></h1>
+    </div>
+    <div class="sub">Lehrgänge digital lernen — wissenschaftlich wirksam: Abfragen, verteilt üben, sofortiges Feedback</div>
+    <button class="theme-btn" id="themeBtn" onclick="themeToggle()" aria-label="Hell/Dunkel umschalten"></button>
+  </header>
+
+  <button class="fontscale-btn" id="fontBtn" onclick="fontScaleCycle()" aria-label="Schriftgröße umschalten">A</button>
+
+  <div class="navi" id="navi"></div>
+
+  <main>
+    <section id="scr-home" class="screen versteckt"></section>
+    <section id="scr-dash" class="screen versteckt"></section>
+    <section id="scr-dashKarten" class="screen versteckt"></section>
+    <section id="scr-quiz" class="screen versteckt"></section>
+    <section id="scr-test" class="screen versteckt"></section>
+    <section id="scr-katalog" class="screen versteckt"></section>
+    <section id="scr-unlagen" class="screen versteckt"></section>
+  </main>
+
+  <footer class="site-foot">
+    <div>Feuerwehr-Lernplattform · Lernfortschritt wird nur lokal auf deinem Gerät gespeichert · Quellen: OÖLFS-Schulungsunterlagen, Prüfungsordnung v03 (OÖLFV)</div>
+  </footer>
+</div>
+
+<canvas id="confetti-canvas"></canvas>
+
+<script src="js/pakete/manifest.js"></script>
+<script src="js/pakete/trfa.js"></script>
+<script src="js/app.js"></script>
+<script>
+  window.addEventListener('load', function(){
+    /* boot() registriert alle Pakete selbst (PAKETE_MAP) und rendert */
+    boot();
+  });
+</script>
+</body>
+</html>
