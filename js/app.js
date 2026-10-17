@@ -1055,6 +1055,7 @@ function initUnlagen(){
    ============================================================ */
 function confetti(n){
   const c = $('confetti-canvas'); if (!c) return;
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return; /* Keine Deko-Animation bei reduzierter Bewegung */
   const ctx = c.getContext('2d');
   c.width = innerWidth; c.height = innerHeight;
   const farben = ['#cf4025','#ffdd64','#e40521','#394348','#2e7d43','#ff6600'];
