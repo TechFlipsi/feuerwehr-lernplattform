@@ -9,6 +9,8 @@ const $ = (id) => document.getElementById(id);
 const mix = (a) => { const b=a.slice(); for(let i=b.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=b[i]; b[i]=b[j]; b[j]=t; } return b; };
 const esc = (s) => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 const jsq = (s) => String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+/* Inline-Markdown (**fett** -> <b>) für Erklärungen/Katalog — MerkHtml nutzt dieselbe Regel. */
+const mdInline = (s) => String(s).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>');
 
 /* ---------- Icons ---------- */
 const ICONS = {
@@ -773,7 +775,7 @@ function zeigeQuiz(){
     '<div class="minfo" style="margin:0">Frage '+(qStatus.pos+1)+' von '+qStatus.idx.length+' · '+qStatus.punkte+' richtig'+(qStatus.rs?' · Fehlerrucksack':'')+'</div></div>'+
     '<div class="karte"><div class="farbe r">'+esc(f.src)+(f.zusatz?' · Zusatz':'')+'</div><div class="frage">'+f.f+'</div>'+
     f.opts.map((o,j)=>'<button class="opt" onclick="quizWaehl('+j+',this)"><span class="buchstabe">'+BUCHST[j]+'</span><span>'+o+'</span></button>').join('')+
-    '<div class="ruck" id="qerkl">'+(f.e||'')+'</div>'+
+    '<div class="ruck" id="qerkl">'+mdInline(f.e||'')+'</div>'+
     '<button class="btn klein" id="qweiter" style="display:none" onclick="quizWeiter()">Weiter '+svgIc('pfeil')+'</button></div>';
   window.scrollTo(0,0);
 }
@@ -985,7 +987,7 @@ function testAusw(){
   const cmt = note===1?'Stark! So gehst du in die Prüfung.':(note===2?'Gut drin — noch eine Runde.':(note===3?'Solide Basis.':(note===4?'Merkhilfen + Karten nochmal.':'Üben, üben — dafür ist der Trainer da.')));
   const fehlerH = fehler.length ? '<div style="text-align:left;margin-top:12px">'+fehler.map(x=>
     '<div class="fehler-row"><div class="farbe r" style="margin-bottom:6px">'+esc(x.src)+'</div><b>'+x.f+'</b><br>'+
-    'Deine Antwort: '+esc(x.deine)+'<br>✅ Richtig: <b>'+esc(x.r)+'</b><br><span class="stat">'+x.e+'</span></div>').join('')+'</div>'
+    'Deine Antwort: '+esc(x.deine)+'<br>✅ Richtig: <b>'+esc(x.r)+'</b><br><span class="stat">'+mdInline(x.e)+'</span></div>').join('')+'</div>'
     : '<div class="stat" style="text-align:center;margin-top:8px">Keine Fehler — sauber! 🎖️</div>';
   const hint = fehler.length ? '<div class="merkkachel" style="margin:12px 0">🎒 Die '+fehler.length+' falschen '+(fehler.length===1?'Frage ist':'Fragen sind')+' automatisch in den <b>Fehlerrucksack</b> gewandert — gezielt nachholen, bis sie sitzen.</div>' : '';
   $('scr-test').innerHTML =
@@ -1004,23 +1006,24 @@ function testAusw(){
    KATALOG — komplett durchsuchbar
    ============================================================ */
 function initKatalog(){
+  const kh = paketAktiv.data.katalog_html || '';
   $('scr-katalog').innerHTML =
     '<div class="mod-head"><button class="mod-back" onclick="go(\'dash\')" aria-label="Zurück">'+svgIc('back')+'</button><h2 style="font-size:1.18em">Kompletter Katalog</h2></div>'+
     '<div class="karte"><div class="farbe r">Alles zum Nachlesen</div>'+
     '<input class="suche" id="zsearch" placeholder="Suchen … (z. B. Greifzug, Mayday, 3-2-7)" oninput="zSearch(this.value)">'+
     '<div class="planhinweis">Durchsucht den ganzen Katalog — Merkhilfen, alle Fragen und Aufgaben.</div>'+
-    '<div id="zcontent2" class="zcontent">'+paketAktiv.data.katalog_html+'</div></div>';
+    '<div id="zcontent2" class="zcontent">'+mdInline(kh)+'</div></div>';
 }
 function zSearch(v){
   const c = $('zcontent2');
-  if (!v || v.length<2){ c.innerHTML = paketAktiv.data.katalog_html; return; }
+  if (!v || v.length<2){ c.innerHTML = mdInline(paketAktiv.data.katalog_html); return; }
   const lv = v.toLowerCase();
   const raw = paketAktiv.data.katalog_html;
   const parts = raw.split(/(?=<div class="(?:merkkachel|zmod|zq|figs)">)/);
   let out = '', hits = 0;
   for (let i=0;i<parts.length;i++){
     const b = parts[i];
-    if (b.toLowerCase().replace(/<[^>]+>/g,' ').indexOf(lv) !== -1){ out += b; hits++; }
+    if (b.toLowerCase().replace(/<[^>]+>/g,' ').indexOf(lv) !== -1){ out += mdInline(b); hits++; }
     if (hits>=60) break;
   }
   c.innerHTML = hits ? out : '<div class="stat">Nichts gefunden.</div>';
