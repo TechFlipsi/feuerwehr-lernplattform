@@ -189,7 +189,7 @@ button:disabled{ opacity:.45; cursor:not-allowed; }
 .pillrow{ display:flex; flex-wrap:wrap; gap:8px; }
 
 /* ---------- Quiz ---------- */
-.opt{ display:flex; align-items:flex-start; gap:12px; width:100%; text-align:left; padding:13px 15px; margin:8px 0;
+.opt{ overflow-wrap:anywhere; display:flex; align-items:flex-start; gap:12px; width:100%; text-align:left; padding:13px 15px; margin:8px 0;
   border:1px solid var(--linie); background:var(--flaeche); border-radius:var(--r);
   font-size:.95em; line-height:1.45; color:var(--text); transition:border-color .12s, background .12s; }
 .opt:hover:not(:disabled){ border-color:var(--linie-stark); background:var(--flaeche-2); }
@@ -276,7 +276,9 @@ html[data-theme="dunkel"] .opt.falsch{ background:rgba(228,5,33,.12); }
   transition:transform .16s var(--ease), border-color .16s, box-shadow .16s; }
 .paket-kachel:hover{ transform:translateY(-3px); border-color:var(--linie-stark);
   box-shadow:0 6px 14px rgba(57,67,72,.1), 0 18px 36px -16px rgba(57,67,72,.28); }
-.paket-kachel .pk-head{ display:flex; align-items:flex-start; gap:13px; margin-bottom:10px; padding:19px 19px 0; }
+.paket-kachel .pk-head{ display:flex; align-items:flex-start; gap:13px; margin-bottom:10px; padding:19px 19px 0; min-width:0; }
+.pk-head > div{ min-width:0; }
+.pk-head h3{ overflow-wrap:anywhere; hyphens:auto; -webkit-hyphens:auto; }
 .paket-kachel p{ color:var(--dim); font-size:.88em; line-height:1.55; margin:10px 19px 0; }
 .paket-kachel .chips-klein{ margin-left:19px; margin-right:19px; }
 .paket-kachel .fbalk{ margin-left:19px; margin-right:19px; }
