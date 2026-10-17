@@ -730,10 +730,12 @@ function quizStart(){
       '<button class="pill" onclick="quizBeginn(\'*ZUS*\')">Alle Zusatz ('+zusN+')</button></div>';
   }
   const praxN = fr.filter(q=>q.m.startsWith('Praxis')).length;
-  h += '<div class="planhinweis" style="margin-top:12px">Praxis-Aufgaben (Theorie-Teil der Praxisaufgaben):</div><div class="pillrow">'+
-    '<button class="pill" onclick="quizBeginn(\'*PRAX*\')">Alle Praxis ('+praxN+')</button>'+
-    gebiete.map(g=>{ const n=fr.filter(q=>q.m2===g&&q.m.startsWith('Praxis')).length; return n?('<button class="pill" onclick="quizBeginn(\'Praxis · '+jsq(g)+'\')">'+esc(g)+' (Praxis)</button>'):''; }).join('')+
-    '</div></div>';
+  if (praxN>0){
+    h += '<div class="planhinweis" style="margin-top:12px">Praxis-Aufgaben (Theorie-Teil der Praxisaufgaben):</div><div class="pillrow">'+
+      '<button class="pill" onclick="quizBeginn(\'*PRAX*\')">Alle Praxis ('+praxN+')</button>'+
+      gebiete.map(g=>{ const n=fr.filter(q=>q.m2===g&&q.m.startsWith('Praxis')).length; return n?('<button class="pill" onclick="quizBeginn(\'Praxis · '+jsq(g)+'\')">'+esc(g)+' (Praxis)</button>'):''; }).join('')+
+      '</div></div>';
+  } else h += '</div>';
   $('scr-quiz').innerHTML = h;
 }
 function quizStartMit(idx, rucksackModus){
