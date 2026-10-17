@@ -319,7 +319,7 @@ const THEMEN_GRUPPEN = [
   { key:'grundlage', name:'Grundausbildung & Grundlehrgang', note:'Basis für jedes aktive Mitglied: Truppmann (001) + Refresher-Prüfungsformat', ids:['trm'] },
   { key:'trupa', name:'Truppführer-Ausbildung (189)', note:'6 Module bis zur Abschnittsprüfung: Katalog + Praxis + Simulation', ids:['trfa'] },
   { key:'fach', name:'Fach- & Zusatzqualifikationen', note:'Parallel möglich: Funk (005), Verkehrsregler (195), Feuerwehrführerschein', ids:['funk','verkehrsregler','fw-fuehrerschein'] },
-  { key:'pruef', name:'Leistungsprüfungen (LPR)', note:'Atemschutz, Sanität, Funk FKAE, FLA Gold — je Bronze/Silber/Gold', ids:['lpr-as','san-lp','fkae-bronze','fla-gold'] },
+  { key:'pruef', name:'Leistungsprüfungen (LPR)', note:'Atemschutz, Branddienst, THL, Sanität, Funk FKAE, FLA Gold — je Bronze/Silber/Gold', ids:['lpr-as','lpr-bd','lpr-thl','san-lp','fkae-bronze','fkae-silber-gold','fla-gold'] },
   { key:'fuehrung', name:'Führungslaufbahn', note:'Führen I → II → Einsatzleiter → Kommandant — Pakete folgen (LFS-intern), Zugang via Refresher im Grundlehrgang', ids:[] },
   { key:'jugend', name:'Feuerwehrjugend', note:'Erprobungen 1–5 → Wissenstest Bronze/Silber/Gold — der Weg bis zum aktiven Dienst', ids:['erprobungen','wissenstest'] }
 ];
