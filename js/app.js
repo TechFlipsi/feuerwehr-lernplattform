@@ -739,6 +739,7 @@ function quizStart(){
   $('scr-quiz').innerHTML = h;
 }
 function quizStartMit(idx, rucksackModus){
+  window.__t2 && clearTimeout(window.__t2); /* alter Auto-Weiter-Timer feuert sonst in die neue Runde */
   qStatus = {l:true, idx:mix(idx), pos:0, punkte:0, rs:!!rucksackModus, multiGewertet:false};
   zeigeQuiz();
 }
