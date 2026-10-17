@@ -319,12 +319,12 @@ input.suche::placeholder{ color:var(--ghost); }
 .zmod{ font-family:var(--head-font); font-weight:700; font-size:1.02em; margin:26px 0 12px; padding-bottom:8px; border-bottom:2px solid var(--linie); }
 #zcontent2 figure{ margin:14px 0; text-align:center; }
 #zcontent2 figure img{ max-width:100%; border-radius:var(--r); border:1px solid var(--linie); background:#fff; }
-#zcontent2 .zq{ background:var(--flaeche-2); border:1px solid var(--linie); border-radius:var(--r); padding:13px 15px; margin:10px 0; line-height:1.58; font-size:.92em; }
+#zcontent2 .zq{ background:var(--flaeche-2); border:1px solid var(--linie); border-radius:var(--r); padding:13px 15px; margin:10px 0; line-height:1.58; font-size:.92em; overflow-wrap:anywhere; }
 #zcontent2 .zq li{ margin:4px 0 4px -16px; }
 #zcontent2 .qn{ font-weight:700; color:var(--rot); }
 
 /* Unterlagen */
-.uni{ display:flex; align-items:center; gap:11px; padding:13px 15px; margin:8px 0; min-height:46px;
+.uni{ display:flex; align-items:center; gap:11px; padding:13px 15px; margin:8px 0; min-height:46px; overflow-wrap:anywhere; min-width:0;
   border:1px solid var(--linie); border-radius:var(--r); color:var(--text); text-decoration:none;
   font-weight:600; font-size:.9em; background:var(--flaeche);
   transition:border-color .14s, background .14s, color .14s; }
