@@ -261,6 +261,13 @@ html[data-theme="dunkel"] .opt.falsch{ background:rgba(228,5,33,.12); }
 /* ---------- Paket-Kachel (OOELFV-Teaser + TechFlipsi-Bento) ---------- */
 .paket-grid{ display:grid; grid-template-columns:1fr; gap:14px; margin:16px 0; }
 @media (min-width:720px){ .paket-grid{ grid-template-columns:1fr 1fr; } }
+
+/* Paket-Kachel Label-Icon + Untertitel + Mehrfachauswahl (QA-Nachtrag) */
+.pk-icon{ width:26px; height:26px; flex:0 0 26px; display:inline-flex; color:var(--text-2); }
+.pk-icon svg{ width:100%; height:100%; }
+.pk-sub{ display:block; font-size:.8em; color:var(--dim); margin-top:2px; }
+.opt.mehrfach-gewaehlt{ border-color:var(--gruen-stark); background:color-mix(in srgb, var(--gruen-stark) 14%, var(--flaeche)); }
+.opt.mehrfach-gewaehlt .buchstabe{ color:var(--gruen-stark); }
 .paket-kachel{ position:relative; display:block; text-align:left; background:var(--flaeche);
   border:1px solid var(--linie); border-radius:var(--r-lg); padding:0; overflow:hidden; box-shadow:var(--shadow);
   transition:transform .16s var(--ease), border-color .16s, box-shadow .16s; }

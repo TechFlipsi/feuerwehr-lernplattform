@@ -78,6 +78,32 @@ window.FW_PAKETE = [
   "gruppe": "pruef"
  },
  {
+  "id": "lpr-bd",
+  "datei": "pakete/lpr-bd.js",
+  "objekt": "PAKET_LPR_BD",
+  "kurz": "LPR BD",
+  "titel": "Branddienst-Prüfung",
+  "untertitel": "LPR Branddienst · Theorie/Zusatz",
+  "farbe": "#8e2420",
+  "icon": "test",
+  "zielgruppe": "aktiv",
+  "gruppe": "pruef",
+  "beschreibung": "LPR Branddienst: Theorie-Fragenkatalog (72 F, RL 4.3.010) + 51 Zusatzfragen MA/ME/Trupps mit Musterantworten (ZL 4.3.016–018), 123 Lernkarten, 14 Merk­hilfen und 12 Unterlagen-Links."
+ },
+ {
+  "id": "lpr-thl",
+  "datei": "pakete/lpr-thl.js",
+  "objekt": "PAKET_LPR_THL",
+  "kurz": "LPR THL",
+  "titel": "THL-Prüfung",
+  "untertitel": "LPR Technische Hilfeleistung",
+  "farbe": "#a8632b",
+  "icon": "test",
+  "zielgruppe": "aktiv",
+  "gruppe": "pruef",
+  "beschreibung": "LPR THL: 30 Zusatzfragen (MA/ME/Trupps) mit Musterantworten + 62-F-Fragenkatalog §17 für die GRKDT-Tests (4×20 F), 100 Karten (inkl. 10 Befehlskarten), 16 Merk­hilfen, PO Stufen I–III."
+ },
+ {
   "id": "fkae-bronze",
   "datei": "pakete/fkae-bronze.js",
   "objekt": "PAKET_FKAE_BRONZE",
@@ -89,6 +115,19 @@ window.FW_PAKETE = [
   "zielgruppe": "aktiv",
   "beschreibung": "FKAE Bronze Station 1: alle 52 Fragen mit Lösungen aus dem offiziellen Katalog — die Theorie-Basis der Funkleistungsprüfung (Stationen 2–5 praktisch, als Unterlagen).",
   "gruppe": "pruef"
+ },
+ {
+  "id": "fkae-silber-gold",
+  "datei": "pakete/fkae-silber-gold.js",
+  "objekt": "PAKET_FKAE_SG",
+  "kurz": "FKAE S&G",
+  "titel": "FKAE Silber & Gold",
+  "untertitel": "Funkleistungen · Station 1",
+  "farbe": "#4a6fa5",
+  "icon": "funk",
+  "zielgruppe": "aktiv",
+  "gruppe": "pruef",
+  "beschreibung": "FKAE Silber (84 F mit offiziellen Lösungen v1.2/2026) & Gold (116 F inkl. Koordinaten-/Gittermeldung, Punkteverteilung) mit 200 Lernkarten, 12 Merk­hilfen und 14 Unterlagen-Links."
  },
  {
   "id": "fla-gold",

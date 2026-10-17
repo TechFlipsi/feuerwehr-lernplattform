@@ -206,6 +206,12 @@ const PAKETE_MAP = {};
 function oeffnePaket(id){
   const e = PAKETE_MAP[id];
   if (!e){ toast('Paket noch nicht geladen.'); return; }
+  if (paketAktiv && paketAktiv.meta && paketAktiv.meta.id===id){ go('dash'); return; }
+  window.__t2 && clearTimeout(window.__t2);
+  tStatus && tStatus.tick && clearInterval(tStatus.tick);
+  qStatus = {l:false, multiGewertet:false};
+  tStatus = {l:false};
+  kStatus = {l:false};
   paketAktiv = e;
   try{ localStorage.setItem('fw_zuletzt', id); }catch(err){}
   go('dash');
@@ -378,8 +384,8 @@ function fortKey(id){ return 'fw_prog_' + id; }
 function progGet(id, n){
   let v = null;
   try{ v = JSON.parse(localStorage.getItem(fortKey(id))||'null'); }catch(e){}
-  if (v && Array.isArray(v.lev) && v.lev.length===n) return v;
-  return { lev:new Array(n).fill(1), due:new Array(n).fill(0), last:new Array(n).fill(0), tick:0 };
+  if (v && Array.isArray(v.lev) && v.lev.length===n){ if (v.shown===undefined) v.shown = 0; if (v.mseen===undefined) v.mseen = 0; return v; }
+  return { lev:new Array(n).fill(1), due:new Array(n).fill(0), last:new Array(n).fill(0), tick:0, shown:0, mseen:0 };
 }
 function progSet(id, v){ try{ localStorage.setItem(fortKey(id), JSON.stringify(v)); }catch(e){} }
 function palettenProg(p){
@@ -729,7 +735,7 @@ function quizStart(){
   $('scr-quiz').innerHTML = h;
 }
 function quizStartMit(idx, rucksackModus){
-  qStatus = {l:true, idx:mix(idx), pos:0, punkte:0, rs:!!rucksackModus};
+  qStatus = {l:true, idx:mix(idx), pos:0, punkte:0, rs:!!rucksackModus, multiGewertet:false};
   zeigeQuiz();
 }
 function quizGebiet(g){
@@ -758,6 +764,7 @@ function quizBeginn(wahl){
 }
 const BUCHST = ['A','B','C','D','E','F'];
 function zeigeQuiz(){
+  qStatus.multiGewertet = false;
   const d = paketAktiv.data;
   const q = $('scr-quiz');
   if (qStatus.pos >= qStatus.idx.length){ quizEnde(); return; }
@@ -770,11 +777,43 @@ function zeigeQuiz(){
     '<button class="btn klein" id="qweiter" style="display:none" onclick="quizWeiter()">Weiter '+svgIc('pfeil')+'</button></div>';
   window.scrollTo(0,0);
 }
-function quizWeiter(){ qStatus.pos++; zeigeQuiz(); }
+function quizWeiter(){
+  const cur = paketAktiv.data.fragen[qStatus.idx[qStatus.pos]];
+  if (Array.isArray(cur.r) && !qStatus.multiGewertet){
+    qStatus.multiGewertet = true;
+    const opts = $('scr-quiz').querySelectorAll('.opt');
+    const gewaehlt = new Set();
+    opts.forEach((b,j)=>{ if (b && b.classList.contains('mehrfach-gewaehlt')) gewaehlt.add(j); });
+    const richtig = gewaehlt.size===cur.r.length && cur.r.every(x=>gewaehlt.has(x));
+    opts.forEach((b,j)=>{
+      if (!b) return;
+      if (cur.r.includes(j)) b.classList.add('richtig');
+      else if (gewaehlt.has(j)) b.classList.add('falsch');
+      else b.classList.add('dim');
+      b.disabled = true;
+    });
+    if (richtig){ qStatus.punkte++; xpAdd(3); if (qStatus.rs) rucksackRemove(qStatus.idx[qStatus.pos]); }
+    else { xpAdd(1); rucksackAdd(qStatus.idx[qStatus.pos]); }
+    const ex = $('qerkl'); if (ex) ex.classList.add('zeigen');
+    const wb = $('qweiter'); if (wb){ wb.textContent = 'Weiter'; wb.style.display='flex'; }
+    return; /* Wertung angezeigt — nächstes quizWeiter geht zur nächsten Frage */
+  }
+  qStatus.pos++; zeigeQuiz();
+}
 function quizWaehl(n, btn){
   const d = paketAktiv.data;
   const f = d.fragen[qStatus.idx[qStatus.pos]];
   const opts = $('scr-quiz').querySelectorAll('.opt');
+  if (Array.isArray(f.r)){ /* Mehrfachantwort: Häkchen umschalten, Wertung erst über 'Fertig' */
+    if (btn){
+      btn.classList.toggle('mehrfach-gewaehlt');
+      const bs = btn.querySelector('.buchstabe');
+      if (bs) bs.textContent = btn.classList.contains('mehrfach-gewaehlt') ? '✓' : BUCHST[n];
+    }
+    const wb = $('qweiter');
+    if (wb){ wb.style.display='flex'; wb.textContent = 'Fertig — auswerten'; }
+    return;
+  }
   opts.forEach(b=>{ if (b) b.disabled = true; });
   if (n===f.r){
     if (btn){ btn.classList.add('richtig'); const bs = btn.querySelector('.buchstabe'); if (bs) bs.textContent='✓'; }
@@ -792,7 +831,7 @@ function quizWaehl(n, btn){
   window.__t2 && clearTimeout(window.__t2);
   window.__t2 = setTimeout(()=>{ if (document.getElementById('qweiter')) quizWeiter(); }, 9000);
 }
-function quizAbort(){ qStatus.l=false; qStatus={l:false}; go('quiz'); }
+function quizAbort(){ window.__t2 && clearTimeout(window.__t2); qStatus.l=false; qStatus={l:false, multiGewertet:false}; go('quiz'); }
 function quizEnde(){
   qStatus.l = false;
   const n = qStatus.idx.length;
@@ -829,7 +868,17 @@ function badgeVergebe(id){
 let tStatus = {l:false};
 const NOTE = (p) => p>=92?1:p>=81?2:p>=67?3:p>=50?4:p>=30?5:6;
 function poModulListe(){
-  return ['Atemschutz','Branddienst','Funk','Kraftbetriebene Geräte','Technik'];
+  const fr = paketAktiv && paketAktiv.data ? paketAktiv.data.fragen : [];
+  if (!fr.length) return [];
+  /* Prüfungstag-Module dynamisch aus dem Paket: je Modul (m-Feld) ausreichend Katalog-Fragen (ohne Praxis/Zusatz) */
+  const zaehl = new Map();
+  fr.forEach(q=>{ if (!q.zusatz && !String(q.m||'').startsWith('Praxis')) zaehl.set(q.m, (zaehl.get(q.m)||0)+1); });
+  const kandidaten = [...zaehl.entries()].filter(([m,n])=>n>=5).map(([m])=>m);
+  if (kandidaten.length>=3) return kandidaten.slice(0,8);
+  /* Fallback: m2-Gruppen */
+  const zaehl2 = new Map();
+  fr.forEach(q=>{ if (!q.zusatz) zaehl2.set(q.m2, (zaehl2.get(q.m2)||0)+1); });
+  return [...zaehl2.entries()].filter(([m,n])=>n>=5).map(([m])=>m).slice(0,8);
 }
 function buildPruefungTag(){
   const fr = paketAktiv.data.fragen;
@@ -856,8 +905,11 @@ function testStart(){
 }
 function testLauf(modus){
   const fr = paketAktiv.data.fragen;
-  const katIdx = fr.map((_,i)=>i).filter(i=>!fr[i].zusatz);
-  const idx = modus===2 ? mix(katIdx).slice(0,30) : buildPruefungTag();
+  const katIdx = fr.map((_,i)=>i).filter(i=>!fr[i].zusatz && typeof fr[i].r==='number');
+  let idx;
+  if (modus===2){ idx = mix(katIdx).slice(0,30); }
+  else { idx = mix(buildPruefungTag()).filter(i=>typeof fr[i].r==='number'); }
+  if (!idx.length){ /* Fallback: kein passender Pool → nur Übungs-Mix */ idx = mix(katIdx).slice(0,30); tStatus = {l:true, modus:2, idx, pos:0, Antw:[], rest:900, tick:null}; zeigeTest(); tStatus.tick = window.setInterval(testTick, 1000); toast('Prüfungstag-Format braucht Modul-Struktur — Übungs-Mix gestartet.'); return; }
   const dauer = modus===2 ? 900 : 1500;
   tStatus = {l:true, modus, idx, pos:0, Antw:[], rest:dauer, tick:null};
   zeigeTest();
@@ -905,7 +957,7 @@ function testAusw(){
       fehler.push({f:f.f, src:f.src, deine:de, r:f.opts[f.r], e:f.e});
       rucksackAdd(fi); }
   });
-  const pct = Math.round(richtig/tStatus.idx.length*100);
+  const pct = tStatus.idx.length ? Math.round(richtig/tStatus.idx.length*100) : 0;
   const note = NOTE(pct);
   xpAdd(pct>=80?25:(pct>=60?15:8));
   aktivHeute('test');
